@@ -11,12 +11,8 @@ class WelcomeProductorController extends Controller
 
         $productores = Productor::all();
 
-        foreach ($productores as $productor) {
-            echo $productor;
-        }die;
-
         return view('welcomeProductor', [
-
+            'productores' => $productores,
         ]);
     }
 }
