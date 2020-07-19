@@ -34,7 +34,7 @@
     </head>
     <body>
 
-        <div class='Master row justify-content-center py-4  h-100'>
+        <div class='Master row justify-content-center pt-4'>
             <div class='col-10'>
                 <div class='row justify-content-betwen'>
                     <div class='col-6'>
