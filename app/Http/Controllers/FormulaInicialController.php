@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Redirector;
 
 use App\Productor;
 use App\Variable;
@@ -15,8 +16,38 @@ class FormulaInicialController extends Controller
 
 
     public function create($id, Request $request){
+
+        $productor = Productor::findOrFail($id);
         $variables = Variable::all();
-        echo ($id);
+        $sum = 0;
+
+
+        foreach ($variables as $variable){
+            if ($request->input($variable->id) == null){
+                return view('formulaInicial', [
+                    'productor' => $productor,
+                    'variables' => $variables,
+                    'errorMessage' => 'Debe llenar todos los campos'
+                ]);
+            }
+            $sum += $request->input($variable->id);
+        }
+
+        if ($sum <> 100){
+            return view('formulaInicial', [
+                'productor' => $productor,
+                'variables' => $variables,
+                'errorMessage' => 'La suma de los porcentajes no es válida'
+            ]);
+
+        }
+
+
+        DB::table('sms_eval_criterio')
+            -> where('fecha_final', null)
+            -> where('id_productor', $id)
+            ->update(['fecha_final' => date('Y-m-d H:i:s')]);
+
 
         foreach ($variables as $variable){
 
@@ -32,13 +63,11 @@ class FormulaInicialController extends Controller
             $criterio->peso = $request->input($variable->id);
             $criterio->tipo_formula = 'i';
 
-
-            echo ($criterio);
             $criterio->save();
 
         }
 
-        return redirect('/Evaluacion');
+        return redirect()->action('EvaluacionDetailController@view', ['id' => $id]);
 
 
 
@@ -102,7 +131,8 @@ class FormulaInicialController extends Controller
 
         return view('formulaInicial', [
             'productor' => $productor,
-            'variables' => $variables
+            'variables' => $variables,
+            'errorMessage' => null
         ]);
     }
 }

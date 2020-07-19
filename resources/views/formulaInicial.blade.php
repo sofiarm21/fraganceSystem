@@ -35,10 +35,15 @@
                     {{ csrf_field() }}
                     <div class='mt-5 col-3'>
 
-                        
+
                         <button type='submit' class="btn btn-info  w-100">
                             Crear fórmula
                         </button>
+                        @if ($errorMessage != null)
+                            <p class='text text-warning mt-3'>
+                                {{$errorMessage}}
+                            </p>
+                        @endif
                     </div>
 
                 </form>
