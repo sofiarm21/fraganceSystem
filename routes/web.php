@@ -13,6 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'WelcomeController@index');
+Route::get('/Evaluacion', 'EvaluacionController@index');
+Route::get('/Compras', 'ComprasController@index');
+Route::get('/Recomendador', 'RecomendadorController@index');
+
+Route::get('/Productor', 'WelcomeProductorController@index');
+Route::get('/ProductorCatalogo/{id}', 'ProductorController@view');
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+//
+// Route::get('/', 'HomeController@index');
+// Route::get('/libro/{id}', 'LibroController@view');
+// Route::post('/create', 'LibroController@create');
