@@ -32,13 +32,46 @@
     <body>
 
         <div class='Master row justify-content-center py-4  h-100'>
-            <div class='col-auto'>
-                <img class=" LogoIcon mx-auto d-block" src="assets/images/logoIcon.png">
-            </div>
             <div class='col-10'>
-                <h2 class='text-info text font-weight-bold'>
-                    @yield('pageTitle')
-                <h2/>
+                <div class='row justify-content-betwen'>
+                    <div class='col-6'>
+                        <div class='row'>
+                            <div class='col-auto'>
+                                <img class=" LogoIcon mx-auto d-block" src="assets/images/logoIcon.png">
+                            </div>
+                            <div>
+                                <h4 class='text-info text font-weight-bold'>
+                                    @yield('pageTitle')
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-6'>
+                        <div class='row'>
+                            <div class='col-4'
+                                <a href='/' class='text-light'>
+                                    <button type="button" class="btn btn-info  w-100">
+                                        Módulo evaluación
+                                    </button>
+                                </a>
+                            </div>
+                            <div class='col-4 text-info'
+                                <a href='/' class='text-light'>
+                                    <button type="button" class="btn btn-info  w-100">
+                                        Módulo compras
+                                    </button>
+                                </a>
+                            </div>
+                            <div class='col-4 text-info'
+                                <a href='/' class='text-light'>
+                                    <button type="button" class="btn btn-info  w-100">
+                                        Recomendador
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class='col-10 primary'>
                 @yield('content')
