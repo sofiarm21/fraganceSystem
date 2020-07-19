@@ -19,26 +19,26 @@
 
 
             <div class="form-group my-5">
-                <form name="add_name" id="add_name">
+                <form action='/Evaluacion/creacion-formula-inicial/create/{{$productor->id}}' method='post'>
 
-                        @foreach ($variables as $variable)
-                            <div class='row my-2'>
-                                <div class='col-2'>
-                                    {{$variable->nombre}}
-                                </div>
-                                <div class='col-6 text-secondary'>
-                                     <input type='text' name='autor' placeholder='Porcentaje'/>
-                                     %
-                                </div>
+                    @foreach ($variables as $variable)
+                        <div class='row my-2'>
+                            <div class='col-2'>
+                                {{$variable->nombre}}
                             </div>
-
-                        @endforeach
-                        {{ csrf_field() }}
-                        <div class='mt-5 col-3'>
-                            <button type='submit' class="btn btn-info  w-100">
-                                Crear fórmula
-                            </button>
+                            <div class='col-6 text-secondary'>
+                                 <input type='text' name='{{$variable->id}}' placeholder='Porcentaje peso {{$variable->id}}'/>
+                                 %
+                            </div>
                         </div>
+                    @endforeach
+                    {{ csrf_field() }}
+                    <div class='mt-5 col-3'>
+
+                        
+                        <button type='submit' class="btn btn-info  w-100">
+                            Crear fórmula
+                        </button>
                     </div>
 
                 </form>

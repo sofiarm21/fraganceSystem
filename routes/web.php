@@ -18,6 +18,7 @@ Route::get('/', 'WelcomeController@index');
 Route::get('/Evaluacion', 'EvaluacionController@index');
 Route::get('/Evaluacion/{id}', 'EvaluacionDetailController@view');
 Route::get('/Evaluacion/creacion-formula-inicial/{id}', 'FormulaInicialController@view');
+Route::post('/Evaluacion/creacion-formula-inicial/create/{id}', 'FormulaInicialController@create');
 
 
 Route::get('/Compras', 'ComprasController@index');
