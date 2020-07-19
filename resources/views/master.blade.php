@@ -40,7 +40,9 @@
                     <div class='col-6'>
                         <div class='row'>
                             <div class='col-auto'>
-                                <img class=" LogoIcon mx-auto d-block" src="assets/images/logoIcon.png">
+                                <a href='/' class='text-light'>
+                                    <img class=" LogoIcon mx-auto d-block" src="assets/images/logoIcon.png">
+                                </a>
                             </div>
                             <div>
                                 <h4 class='text-info text font-weight-bold'>
