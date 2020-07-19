@@ -14,8 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'WelcomeController@index');
+
 Route::get('/Evaluacion', 'EvaluacionController@index');
+Route::get('/Evaluacion/{id}', 'EvaluacionDetailController@view');
+
 Route::get('/Compras', 'ComprasController@index');
+
 Route::get('/Recomendador', 'RecomendadorController@index');
 
 Route::get('/Productor', 'WelcomeProductorController@index');
