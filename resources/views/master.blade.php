@@ -51,22 +51,22 @@
                     </div>
                     <div class='col-6'>
                         <div class='row'>
-                            <div class='col-4'
-                                <a href='/' class='text-light'>
+                            <div class='col-4'>
+                                <a href='/Evaluacion' class='text-light'>
                                     <button type="button" class="btn btn-info  w-100">
                                         Módulo evaluación
                                     </button>
                                 </a>
                             </div>
-                            <div class='col-4 text-info'
-                                <a href='/' class='text-light'>
+                            <div class='col-4 text-info'>
+                                <a href='/Compras' class='text-light'>
                                     <button type="button" class="btn btn-info  w-100">
                                         Módulo compras
                                     </button>
                                 </a>
                             </div>
-                            <div class='col-4 text-info'
-                                <a href='/' class='text-light'>
+                            <div class='col-4 text-info'>
+                                <a href='/Recomendador' class='text-light'>
                                     <button type="button" class="btn btn-info  w-100">
                                         Recomendador
                                     </button>
