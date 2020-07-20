@@ -20,23 +20,46 @@ class FormulaInicialController extends Controller
         $productor = Productor::findOrFail($id);
         $variables = Variable::all();
         $sum = 0;
-
+        $escala = DB::table('sms_escala')
+        ->select('sms_escala.rango_inicial', 'sms_escala.rango_final')
+        ->from('sms_escala')
+        ->where('sms_escala.id_productor','=',$id)
+        ->where('sms_escala.fecha_final','=',null)
+        ->get();
 
         foreach ($variables as $variable){
             if ($request->input($variable->id) == null){
                 return view('formulaInicial', [
                     'productor' => $productor,
                     'variables' => $variables,
+                    'escala' => $escala,
                     'errorMessage' => 'Debe llenar todos los campos'
+                ]);
+            }
+            else if ($request->input($variable->id) > $escala[0]->rango_final){
+                return view('formulaInicial', [
+                    'productor' => $productor,
+                    'variables' => $variables,
+                    'escala' => $escala,
+                    'errorMessage' => 'El porcentaje no debe sobrepasar a la escala'
+                ]);
+            }
+            else if ($request->input($variable->id) < $escala[0]->rango_inicial){
+                return view('formulaInicial', [
+                    'productor' => $productor,
+                    'variables' => $variables,
+                    'escala' => $escala,
+                    'errorMessage' => 'El porcentaje no debe estar por debajo de la escala'
                 ]);
             }
             $sum += $request->input($variable->id);
         }
 
-        if ($sum <> 100){
+        if ($sum <> $escala[0]->rango_final){
             return view('formulaInicial', [
                 'productor' => $productor,
                 'variables' => $variables,
+                'escala' => $escala,
                 'errorMessage' => 'La suma de los porcentajes no es válida'
             ]);
 
@@ -128,10 +151,19 @@ class FormulaInicialController extends Controller
 
         $productor = Productor::findOrFail($id);
         $variables = Variable::all();
+        $escala = DB::table('sms_escala')
+        ->select('sms_escala.rango_inicial', 'sms_escala.rango_final')
+        ->from('sms_escala')
+        ->where('sms_escala.id_productor','=',$id)
+        ->where('sms_escala.fecha_final','=',null)
+        ->get();
+
+        var_dump($escala);
 
         return view('formulaInicial', [
             'productor' => $productor,
             'variables' => $variables,
+            'escala' => $escala,
             'errorMessage' => null
         ]);
     }

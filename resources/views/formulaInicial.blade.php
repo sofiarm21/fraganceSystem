@@ -14,7 +14,8 @@
                 Creación fórmula inicial
             </h5>
             <p class='text text-secondary'>
-                Eliga las variables que quiere evaluar y asigneles un porcentaje segun su importancia. La suma de los porcentasjes debe sumar 100%
+                Eliga las variables que quiere evaluar y asigneles un porcentaje segun su importancia.
+                La escala de evaluación es de {{$escala[0]->rango_inicial}}%  - {{$escala[0]->rango_final}}%
             </p>
 
 
@@ -27,7 +28,7 @@
                                 {{$variable->nombre}}
                             </div>
                             <div class='col-6 text-secondary'>
-                                 <input type='text' name='{{$variable->id}}' placeholder='Porcentaje peso {{$variable->id}}'/>
+                                 <input type='text' name='{{$variable->id}}' placeholder='Porcentaje'/>
                                  %
                             </div>
                         </div>
