@@ -21,7 +21,18 @@ class EvaluacionDetailController extends Controller
         ->where('sms_escala.fecha_final','=',null)
         ->get()
         ->values([0]);
-        //
+
+        $formula_inicial = DB::table('sms_eval_criterio')
+        ->select('sms_eval_criterio.id_variable', 'sms_eval_criterio.peso')
+        ->from('sms_eval_criterio')
+        ->where('sms_eval_criterio.id_productor','=',$id)
+        ->where('sms_eval_criterio.fecha_final','=',null)
+        ->get();
+
+        var_dump($formula_inicial);
+
+
+
         // $criterio->id_criterio = DB::table('sms_variable')
         //     ->select('sms_variable.id')
         //     ->from('sms_variable')
@@ -31,7 +42,9 @@ class EvaluacionDetailController extends Controller
 
         return view('evaluacionDetail', [
             'productor' => $productor,
-            'escala' => $escala
+            'escala' => $escala,
+            'formula_inicial' => $formula_inicial
+
         ]);
     }
 }
