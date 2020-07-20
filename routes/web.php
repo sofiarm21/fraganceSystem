@@ -20,6 +20,7 @@ Route::get('/Evaluacion/{id}', 'EvaluacionDetailController@view');
 Route::get('/Evaluacion/creacion-formula-inicial/{id}', 'FormulaInicialController@view');
 Route::get('/Evaluacion/creacion-escala/{id}', 'EscalaController@view');
 Route::get('/Evaluacion/registro-proveedor/{id}', 'RegistroProveedorController@view');
+Route::get('/Evaluacion/creacion-contrato/{id_productor}/{id_proveedor}', 'EvaluacionContratoController@view');
 Route::post('/Evaluacion/creacion-formula-inicial/create/{id}', 'FormulaInicialController@create');
 Route::post('/Evaluacion/creacion-escala/create/{id}', 'EscalaController@create');
 

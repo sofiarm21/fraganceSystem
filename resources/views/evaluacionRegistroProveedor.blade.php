@@ -28,23 +28,27 @@
                 </div>
             </div>
             @foreach ($proveedores as $proveedor)
+            <a href='/Evaluacion/creacion-contrato/{{$productor_id}}/{{$proveedor->proveedor_id}}'>
                 <div class='row my-2'>
-                    <div class='col-3'>
-                        {{$proveedor->proveedor_nombre}}
-                    </div>
-                    <div class='col-3'>
-                        {{$proveedor->pais_nombre}}
-                    </div>
-                    <div class='col-3'>
-                        {{$proveedor->tipo_envio}}
-                    </div>
-                    <div class='col-3'>
-                        $ {{$proveedor->costo_envio}}
-                    </div>
-                    <div class='col-12'>
-                        <hr/>
-                    </div>
+
+                        <div class='col-3'>
+                            {{$proveedor->proveedor_nombre}}
+                        </div>
+                        <div class='col-3'>
+                            {{$proveedor->pais_nombre}}
+                        </div>
+                        <div class='col-3'>
+                            {{$proveedor->tipo_envio}}
+                        </div>
+                        <div class='col-3'>
+                            $ {{$proveedor->costo_envio}}
+                        </div>
+                        <div class='col-12'>
+                            <hr/>
+                        </div>
+
                 </div>
+                </a>
             @endforeach
         </div>
     </div>
