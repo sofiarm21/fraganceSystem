@@ -25,7 +25,7 @@
             .primary{
                 color: #523DD7
             }
-            h1,h2,h3{
+            h1,h2,h3,h4{
                 color:  #523DD7
             }
 

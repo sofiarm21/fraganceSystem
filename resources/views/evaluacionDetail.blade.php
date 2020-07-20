@@ -17,7 +17,7 @@
                 Contratos
             </h5>
             @if(count($formula_inicial) >= 1)
-                <a href='/Evaluacion/creacion-formula-inicial/{{$productor->id}}' class='text-light'>
+                <a href='/Evaluacion/registro-proveedor/{{$productor->id}}' class='text-light'>
                     <button type='button' class='btn btn-info mt-5'>
                         Registrar nuevo proveedor
                     </button>
