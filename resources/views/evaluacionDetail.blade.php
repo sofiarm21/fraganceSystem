@@ -15,7 +15,7 @@
             </h5>
         </div>
         <div class='col-2'>
-            @if($escala != null)
+            @if(count($escala) >= 1)
                 <a href='/Evaluacion/creacion-formula-inicial/{{$productor->id}}' class='text-light'>
                     <button type='button' class='btn btn-info mt-5'>
                         Crear fórmula inicial

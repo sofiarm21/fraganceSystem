@@ -15,10 +15,12 @@ class EvaluacionDetailController extends Controller
         $productor = Productor::findOrFail($id);
         //$escala = Escala::find($id);
         $escala = DB::table('sms_escala')
-        ->select('sms_escala.rango_inicial, sms_escala.rango_final ')
+        ->select('sms_escala.rango_inicial', 'sms_escala.rango_final')
         ->from('sms_escala')
-        ->where('sms_escala.id_proveedeor','=',$id)
-        ->where('sms_escala.fecha_final','=',null);
+        ->where('sms_escala.id_productor','=',$id)
+        ->where('sms_escala.fecha_final','=',null)
+        ->get()
+        ->values([0]);
         //
         // $criterio->id_criterio = DB::table('sms_variable')
         //     ->select('sms_variable.id')
