@@ -13,7 +13,7 @@
             <p class='text text-secondary mb-5'>
                 Los siguientes proveedores estan disponibles y tienen envíos a su país
             </p>
-            <div class='row my-2 text text-success'>
+            <div class='row my-2 py-3 text text-info border border-dark font-weight-bold'>
                 <div class='col-3'>
                     Proveedor
                 </div>
@@ -25,9 +25,6 @@
                 </div>
                 <div class='col-3'>
                     Costo
-                </div>
-                <div class='col-12'>
-                    <hr/>
                 </div>
             </div>
             @foreach ($proveedores as $proveedor)
