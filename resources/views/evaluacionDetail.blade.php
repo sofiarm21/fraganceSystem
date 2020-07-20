@@ -26,7 +26,7 @@
                 <button type='button' class='btn btn-info mt-5' disabled>
                     Registrar nuevo proveedor
                 </button>
-                <p class='text text-warning mt-2'>
+                <p class='text text-danger mt-2'>
                     Para registrar un nuevo proveedor debe tener una formula de evaluación inicial creada
                 </p>
             @endif
@@ -47,7 +47,7 @@
                 <button type='button' class='btn btn-info mt-5' disabled>
                     Crear fórmula inicial
                 </button>
-                <p class='text text-warning mt-2'>
+                <p class='text text-danger mt-2'>
                     Para crear una formula inicial debe haber creado una escala de evaluación
                 </p>
             @endif
