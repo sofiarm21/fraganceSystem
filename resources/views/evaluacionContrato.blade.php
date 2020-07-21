@@ -163,6 +163,109 @@
                 </div>
 
             @endforeach
+            <div class='col-6 mt-5'>
+                <div class='col-12 mb-4'>
+                    <h5>
+                        Condiciones de pago
+                    </h5>
+                </div>
+                <div class='col-12'>
+                    <div class='row font-weight-bold my-5'>
+                        <div class='col'>
+                            Tipo de pago
+                        </div>
+                        <div class='col'>
+                            Cantidad de cuotas
+                        </div>
+                        <div class='col'>
+                            Pagos
+                        </div>
+                    </div>
+                @for ($i = 0; $i < count($condiciones_pago); $i++)
+                    <div class='row text-secondary'>
+                        <div class='tipoPago col'>
+
+                            @if ($condiciones_pago[$i]->cantidad_cuotas != null)
+                                @if ($i == 0)
+                                    {{$condiciones_pago[$i]->tipo}}
+                                @else
+                                    @if ($condiciones_pago[$i]->cod_cond_pago != $condiciones_pago[$i - 1]->cod_cond_pago)
+                                        {{$condiciones_pago[$i]->tipo}}
+                                    @endif
+                                @endif
+                            @else
+                                {{$condiciones_pago[$i]->tipo}}
+                            @endif
+                        </div>
+                        <div class='cantCuotas col'>
+                            @if ($condiciones_pago[$i]->cantidad_cuotas != null)
+                                @if ($i == 0)
+                                    {{$condiciones_pago[$i]->cantidad_cuotas}}
+                                @else
+                                    @if ($condiciones_pago[$i]->cod_cond_pago != $condiciones_pago[$i - 1]->cod_cond_pago)
+                                        {{$condiciones_pago[$i]->cantidad_cuotas}}
+                                    @endif
+                                @endif
+                            @else
+                                1
+                            @endif
+                        </div>
+                        <div class='porcentajeCuotas col'>
+                            @if ($condiciones_pago[$i]->cantidad_cuotas != null)
+
+                                    <p class='font-weight-bold mb-0'>
+                                        Pago {{$i + 1}}:
+                                    </p>
+                                        {{$condiciones_pago[$i]->pago_porcentajes}} %
+                                    <p class='font-weight-bold mb-0'>
+                                        Recargo:
+                                    </p>
+                                    {{$condiciones_pago[$i]->recargo}} %
+                                    <p class='font-weight-bold mb-0'>
+                                        Descuento:
+                                    </p>
+                                    {{$condiciones_pago[$i]->descuento}} %
+                            @else
+                            <p class='font-weight-bold mb-0'>
+                                Pago:
+                            </p>
+                                100 %
+                            @endif
+                        </div>
+
+
+
+                        <div class='col-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                @endfor
+                </div>
+            </div>
+            <div class='col-6 mt-5'>
+                <div class='col-12 mb-4'>
+                    <h5>
+                        Condiciones de envio
+                    </h5>
+                </div>
+                @foreach ($condiciones_envio as $condicion_envio)
+                    <div class='row text-secondary'>
+                        <div class='col'>
+                            {{$condicion_envio->envio_pais}}
+                        </div>
+                        <div class='col'>
+                            {{$condicion_envio->envio_transporte}}
+                        </div>
+                        <div class='col'>
+                            {{$condicion_envio->envio_costo}}
+                        </div>
+                        <div class='col-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
     </div>
 
 @endsection

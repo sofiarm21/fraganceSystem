@@ -49,10 +49,59 @@ class EvaluacionContratoController extends Controller
         ->distinct()
         ->get();
 
+        // $condiciones_pago = DB::table('sms_condicion_pago')
+        // ->select(
+        //     'sms_condicion_pago.tipo',
+        //     'sms_condicion_pago.cantidad_cuotas'
+        // )
+        // ->from('sms_condicion_pago')
+        // ->where('sms_condicion_pago.id_proveedor','=',$id_proveedor)
+        // ->where('sms_condicion_pago.vigencia','=',true)
+        // ->select(
+        //     'sms_cuotas.sms_cuotas.porcentaje_pago',
+        //
+        // )
+        // ->from('sms_cuotas')
+        // ->where('sms_cuotas.cod_cond_pago','=','sms_condicion_pago.codigo')
+        // ->distinct()
+        // ->get();
+
+
+        $condiciones_pago = DB::table('sms_condicion_pago')
+        ->leftJoin('sms_cuotas','sms_condicion_pago.codigo','=','sms_cuotas.cod_cond_pago')
+        ->where('sms_condicion_pago.id_proveedor','=',$id_proveedor)
+        ->select(
+            'sms_condicion_pago.tipo',
+            'sms_condicion_pago.cantidad_cuotas',
+            'sms_cuotas.porcentaje_pago AS pago_porcentajes',
+            'sms_cuotas.dias_para_pago AS pago_dias',
+            'sms_cuotas.recargo',
+            'sms_cuotas.descuento',
+            'sms_cuotas.cod_cond_pago',
+        )
+        ->distinct()
+        ->get();
+
+
+
+        $condiciones_envio = DB::table('sms_envio')
+        ->join('sms_paises','sms_envio.cod_pais','=','sms_paises.codigo')
+        ->where('sms_envio.id_proveedor','=',$id_proveedor)
+        ->select('sms_envio.tipo_transporte AS envio_transporte','sms_envio.costo AS envio_costo','sms_paises.nombre AS envio_pais')
+        ->distinct()
+        ->get();
+
+        var_dump($condiciones_pago);
+
+
+
+
         return view('evaluacionContrato', [
             'productor' => $productor,
             'proveedor' => $proveedor,
-            'productos' => $productos
+            'productos' => $productos,
+            'condiciones_pago' => $condiciones_pago,
+            'condiciones_envio' => $condiciones_envio
         ]);
     }
 }
