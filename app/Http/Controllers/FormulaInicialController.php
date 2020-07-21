@@ -158,7 +158,7 @@ class FormulaInicialController extends Controller
         ->where('sms_escala.fecha_final','=',null)
         ->get();
 
-        var_dump($escala);
+
 
         return view('formulaInicial', [
             'productor' => $productor,

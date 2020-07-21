@@ -51,10 +51,11 @@
                 Productos
             </h5>
         </div>
-        <div class='form row'>
+
+        <form action='/Evaluacion/generacion-contrato/create/{{$productor->id}}/{{$proveedor[0]->id}}' method='POST' class='row'>
             @foreach ($productos as $producto)
             <div class='col-4 p-4'>
-                <input class="form-check-input" type="checkbox" id='{{$producto->codigo}}'/>
+                <input class="form-check-input" type="checkbox" name='producto_codigo[]' id='{{$producto->codigo}}' value='{{$producto->codigo}}'/>
                 <div class='card bg-white p-0'>
                     <div class='productCard card-img-top'>
 
@@ -189,19 +190,20 @@
                 @for ($i = 0; $i < count($condiciones_pago); $i++)
                     <div class='row text-secondary'>
                         <div class='tipoPago col'>
-
                             @if ($condiciones_pago[$i]->cantidad_cuotas != null)
                                 @if ($i == 0)
-                                    <input class="form-check-input" type="checkbox" id='{{$condiciones_pago[$i]->cod_cond_pago}}'/>
+                                    <input class="form-check-input" type="checkbox" name='condiciones_pago[]' value='{{$condiciones_pago[$i]->codigo}}' id='{{$condiciones_pago[$i]->codigo}}'/>
+
                                     {{$condiciones_pago[$i]->tipo}}
                                 @else
                                     @if ($condiciones_pago[$i]->cod_cond_pago != $condiciones_pago[$i - 1]->cod_cond_pago)
-                                    <input class="form-check-input" type="checkbox" id='{{$condiciones_pago[$i]->cod_cond_pago}}'/>
+                                    <input class="form-check-input" type="checkbox" name='condiciones_pago[]' value='{{$condiciones_pago[$i]->codigo}}' id='{{$condiciones_pago[$i]->codigo}}'/>
+
                                         {{$condiciones_pago[$i]->tipo}}
                                     @endif
                                 @endif
                             @else
-                                <input class="form-check-input" type="checkbox" id='{{$condiciones_pago[$i]->cod_cond_pago}}'/>
+                                <input class="form-check-input" type="checkbox" name='condiciones_pago[]' value='{{$condiciones_pago[$i]->codigo}}' id='{{$condiciones_pago[$i]->codigo}}'/>
                                 {{$condiciones_pago[$i]->tipo}}
                             @endif
                         </div>
@@ -276,7 +278,8 @@
                 @foreach ($condiciones_envio as $condicion_envio)
                     <div class='row text-secondary'>
                         <div class='col'>
-                            <input class="form-check-input" type="checkbox" id='{{$condicion_envio->cod_pais}}'/>
+
+                            <input class="form-check-input" type="checkbox" name='condicion_envio[]' value='{{$condicion_envio->cod_pais}}' id='{{$condicion_envio->cod_pais}}'/>
                             {{$condicion_envio->envio_pais}}
                         </div>
                         <div class='col'>
@@ -295,7 +298,7 @@
                 <h5>
                     Exclusividad
                 </h5>
-                <input class="form-check-input" type="checkbox" id='exclusividad'/>
+                <input class="form-check-input" type="checkbox" name='exclusividad' vallue=true id='exclusividad'/>
                 <p class='text-secondary'>
                     Quiero que la relación con este proveedor sea exclusiva
                 </p>
@@ -318,11 +321,12 @@
                 </p>
             </div>
             <div class='col-6 mb-5'>
+                {{ csrf_field() }}
                 <button type='submit' class="btn btn-info">
                     Generar contrato
                 </button>
             </div>
-        </div>
+        </form>
     </div>
 
 @endsection

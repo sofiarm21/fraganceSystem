@@ -29,7 +29,7 @@ class EvaluacionDetailController extends Controller
         ->where('sms_eval_criterio.fecha_final','=',null)
         ->get();
 
-        var_dump($formula_inicial);
+    
 
 
 

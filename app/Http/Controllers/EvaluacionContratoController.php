@@ -18,7 +18,7 @@ class EvaluacionContratoController extends Controller
 
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
-        
+
         $formula_inicial = DB::table('sms_eval_criterio')
         ->join('sms_escala','sms_eval_criterio.id_productor','=', 'sms_eval_criterio.id_productor')
         ->where('sms_eval_criterio.id_productor','=',$id_productor)
@@ -223,8 +223,7 @@ class EvaluacionContratoController extends Controller
                             array_push($productos_disponibles, $producto_contratado);
                         }
                     }
-                }else{
-                    var_dump($producto_contratado);
+    
                     array_push($productos_disponibles, $producto_contratado);
                 }
             }

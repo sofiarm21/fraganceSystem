@@ -26,6 +26,7 @@ Route::get('/Evaluacion/generacion-contrato/{id_productor}/{id_proveedor}', 'Gen
 Route::post('/Evaluacion/creacion-formula-inicial/create/{id}', 'FormulaInicialController@create');
 Route::post('/Evaluacion/creacion-escala/create/{id}', 'EscalaController@create');
 Route::post('/Evaluacion/creacion-contrato/evaluar/{id_productor}/{ID_PROVEEDOR}', 'EvaluacionContratoController@evaluar');
+Route::post('/Evaluacion/generacion-contrato/create/{id_productor}/{id_proveedor}', 'GeneracionContratoController@create');
 
 
 
