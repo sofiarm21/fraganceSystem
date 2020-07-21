@@ -22,8 +22,13 @@
                     <p class='text-secondary mt-5'>
                         Puede proceder a crear un cotrato con este proveedor
                     </p>
+                    <a href='/Evaluacion/generacion-contrato/{{$productor->id}}/{{$proveedor->id}}' class='text-light'>
+                        <button type="button" class="btn btn-info mb-4">
+                            Proceder a crear un contrato
+                        </button>
+                    </a>
                     <a href='/Evaluacion/{{$productor->id}}' class='text-light'>
-                        <button type="button" class="btn btn-info  w-100">
+                        <button type="button" class="btn btn-info">
                             Regresar a módulo evaluación
                         </button>
                     </a>
@@ -32,7 +37,7 @@
                         El proveedor no cuenta con los resultados de la evaluación suficientes como para crear un contrato con él
                     </p>
                     <a href='/Evaluacion/{{$productor->id}}' class='text-light'>
-                        <button type="button" class="btn btn-info  w-100">
+                        <button type="button" class="btn btn-info">
                             Regresar a módulo evaluación
                         </button>
                     </a>

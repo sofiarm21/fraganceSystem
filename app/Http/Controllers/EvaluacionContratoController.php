@@ -15,10 +15,8 @@ class EvaluacionContratoController extends Controller
 {
 
     public function evaluar($id_productor, $id_proveedor, Request $request){
-
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
-
         $formula_inicial = DB::table('sms_eval_criterio')
         ->join('sms_escala','sms_eval_criterio.id_productor','=', 'sms_eval_criterio.id_productor')
         ->where('sms_eval_criterio.id_productor','=',$id_productor)
@@ -32,7 +30,12 @@ class EvaluacionContratoController extends Controller
         )
         ->get();
 
+        foreach ($formula_inicial as $variable){
+            if (($request->input($variable->id_variable) > 10) || ($request->input($variable->id_variable) < 1)){
+                return back()->withInput();
+            }
 
+        }
 
         $evaluacion_resultado = new EvaluacionResultado();
         $evaluacion_resultado->id_productor=$id_productor;
