@@ -15,8 +15,10 @@ class EvaluacionContratoController extends Controller
 {
 
     public function evaluar($id_productor, $id_proveedor, Request $request){
+
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
+        
         $formula_inicial = DB::table('sms_eval_criterio')
         ->join('sms_escala','sms_eval_criterio.id_productor','=', 'sms_eval_criterio.id_productor')
         ->where('sms_eval_criterio.id_productor','=',$id_productor)
@@ -56,10 +58,6 @@ class EvaluacionContratoController extends Controller
         if ($evaluacion_resultado->resultado > (0.8 * ($formula_inicial[0]->rango_final - $formula_inicial[0]->rango_inicial)) / 10){
             $aprobado = true;
         }
-
-        echo($evaluacion_resultado->resultado);
-        echo((0.8 * ($formula_inicial[0]->rango_final - $formula_inicial[0]->rango_inicial)) / 10);
-        var_dump($aprobado);
 
         return view('evaluacionResultado', [
             'productor' => $productor,
@@ -252,8 +250,6 @@ class EvaluacionContratoController extends Controller
         )
         ->distinct()
         ->get();
-
-
 
         $condiciones_envio = DB::table('sms_envio')
         ->join('sms_paises','sms_envio.cod_pais','=','sms_paises.codigo')
