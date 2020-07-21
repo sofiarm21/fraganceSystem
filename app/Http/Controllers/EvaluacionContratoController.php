@@ -32,7 +32,27 @@ class EvaluacionContratoController extends Controller
         ->get();
 
 
+        // $productos = DB::table('sms_materia_prima_esencias')
+        // ->select(
+        //     'sms_materia_prima_esencias.nombre',
+        //     'sms_materia_prima_esencias.nombre_alternativo',
+        //     'sms_materia_prima_esencias.num_ipc',
+        //     'sms_materia_prima_esencias.num_tsca_cas',
+        //     'sms_materia_prima_esencias.num_einecs',
+        //     'sms_materia_prima_esencias.descripcion_visual',
+        //     'sms_materia_prima_esencias.vida_util',
+        //     'sms_materia_prima_esencias.solubilidad',
+        //     'sms_materia_prima_esencias.inflamabilidad',
+        //     'sms_materia_prima_esencias.proceso'
+        // )
+        // ->from('sms_materia_prima_esencias')
+        // ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
+        // ->distinct()
+        // ->get();
+
         $productos = DB::table('sms_materia_prima_esencias')
+        ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
+        ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
         ->select(
             'sms_materia_prima_esencias.nombre',
             'sms_materia_prima_esencias.nombre_alternativo',
@@ -43,10 +63,10 @@ class EvaluacionContratoController extends Controller
             'sms_materia_prima_esencias.vida_util',
             'sms_materia_prima_esencias.solubilidad',
             'sms_materia_prima_esencias.inflamabilidad',
-            'sms_materia_prima_esencias.proceso'
+            'sms_materia_prima_esencias.proceso',
+            'sms_presentacion_mp.precio',
+            'sms_presentacion_mp.volml'
         )
-        ->from('sms_materia_prima_esencias')
-        ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
         ->distinct()
         ->get();
 
