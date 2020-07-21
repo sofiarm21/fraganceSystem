@@ -293,7 +293,7 @@
                     Para las proximas preguntas evalue este proveedor en una escala del 1 al 10. Siendo 1 muy malo y 10 muy bueno.
                 </p>
             </div>
-            <form>
+            <form action='/Evaluacion/creacion-contrato/evaluar/{{$productor->id}}/{{$id_proveedor}}' method='post'>
                 <div class='col-12'>
                     @foreach ($variables as $variable)
                         <div class='row mb-3'>
@@ -305,9 +305,12 @@
                             </div>
                         </div>
                     @endforeach
+                    {{ csrf_field() }}
                 </div>
+
+
                 <div class='col-6 my-5'>
-                    <button type='submit' class="btn btn-info  w-100">
+                    <button type='submit' class="btn btn-info">
                         Crear fórmula
                     </button>
                 </div>
