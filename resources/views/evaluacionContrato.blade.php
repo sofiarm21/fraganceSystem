@@ -52,8 +52,8 @@
             </h5>
         </div>
             @foreach ($productos as $producto)
-
-                <div class='card col-3 m-4 bg-white p-0'>
+            <div class='col-4 p-4'>
+                <div class='card bg-white p-0'>
                     <div class='productCard card-img-top'>
 
                     </div>
@@ -161,7 +161,7 @@
                         </div>
                     </div>
                 </div>
-
+            </div>
             @endforeach
             <div class='col-6 mt-5'>
                 <div class='col-12 mb-4'>
@@ -243,10 +243,27 @@
                 </div>
             </div>
             <div class='col-6 mt-5'>
-                <div class='col-12 mb-4'>
-                    <h5>
-                        Condiciones de envio
-                    </h5>
+                <div class='row'>
+                    <div class='col-12 mb-4'>
+                        <h5>
+                            Condiciones de envio
+                        </h5>
+                    </div>
+                    <div class='col-4 font-weight-bold mt-3 mb-4'>
+
+                            Pais
+
+                    </div>
+                    <div class='col-4 font-weight-bold mt-3 mb-4'>
+
+                            Tipo
+
+                    </div>
+                    <div class='col-4 font-weight-bold mt-3 mb-4'>
+
+                            Precio
+
+                    </div>
                 </div>
                 @foreach ($condiciones_envio as $condicion_envio)
                     <div class='row text-secondary'>
@@ -265,6 +282,33 @@
                     </div>
                 @endforeach
             </div>
+            <div class='col-12 mt-5 mb-4'>
+                <h5>
+                    Evaluación
+                </h5>
+                <p class='text-secondary'>
+                    Para las proximas preguntas evalue este proveedor en una escala del 1 al 10. Siendo 1 muy malo y 10 muy bueno.
+                </p>
+            </div>
+            <form>
+                <div class='col-12'>
+                    @foreach ($variables as $variable)
+                        <div class='row mb-3'>
+                            <div class='col-4'>
+                                {{$variable->descripcion}}
+                            </div>
+                            <div class='col-1'>
+                                <input type='text' name='{{$variable->id}}' placeholder='1-10'/>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class='col-6 my-5'>
+                    <button type='submit' class="btn btn-info  w-100">
+                        Crear fórmula
+                    </button>
+                </div>
+            </form>
 
     </div>
 

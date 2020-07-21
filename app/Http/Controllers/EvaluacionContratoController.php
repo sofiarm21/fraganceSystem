@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Productor;
 use App\Proveedor;
+use App\Variable;
 
 
 class EvaluacionContratoController extends Controller
@@ -49,20 +50,25 @@ class EvaluacionContratoController extends Controller
         ->distinct()
         ->get();
 
-        // $condiciones_pago = DB::table('sms_condicion_pago')
+        //verificar cuando existan contratos
+        // $productos = DB::table('sms_contrato')
+        // ->join('sms_det_contrato','sms_contrato.codigo','=','sms_det_contrato.cod_contrato')
+        // ->where('sms_contrato.id_proveedor', '=', $id_proveedor)
+        // ->where('sms_contrato.exclusividad', '=', false)
+        // ->join('sms_materia_prima_esencias','sms_det_contrato.cod_mp_esencia','=','sms_materia_prima_esencias.codigo')
+        // ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
         // ->select(
-        //     'sms_condicion_pago.tipo',
-        //     'sms_condicion_pago.cantidad_cuotas'
+        //     'sms_materia_prima_esencias.nombre',
+        //     'sms_materia_prima_esencias.nombre_alternativo',
+        //     'sms_materia_prima_esencias.num_ipc',
+        //     'sms_materia_prima_esencias.num_tsca_cas',
+        //     'sms_materia_prima_esencias.num_einecs',
+        //     'sms_materia_prima_esencias.descripcion_visual',
+        //     'sms_materia_prima_esencias.vida_util',
+        //     'sms_materia_prima_esencias.solubilidad',
+        //     'sms_materia_prima_esencias.inflamabilidad',
+        //     'sms_materia_prima_esencias.proceso'
         // )
-        // ->from('sms_condicion_pago')
-        // ->where('sms_condicion_pago.id_proveedor','=',$id_proveedor)
-        // ->where('sms_condicion_pago.vigencia','=',true)
-        // ->select(
-        //     'sms_cuotas.sms_cuotas.porcentaje_pago',
-        //
-        // )
-        // ->from('sms_cuotas')
-        // ->where('sms_cuotas.cod_cond_pago','=','sms_condicion_pago.codigo')
         // ->distinct()
         // ->get();
 
@@ -91,7 +97,16 @@ class EvaluacionContratoController extends Controller
         ->distinct()
         ->get();
 
-        var_dump($condiciones_pago);
+        $formula_inicial = DB::table('sms_eval_criterio')
+        ->select('sms_eval_criterio.id_variable', 'sms_eval_criterio.peso')
+        ->from('sms_eval_criterio')
+        ->where('sms_eval_criterio.id_productor','=',$id_productor)
+        ->where('sms_eval_criterio.fecha_final','=',null)
+        ->get();
+
+        $variables = Variable::all();
+
+        //var_dump($condiciones_pago);
 
 
 
@@ -101,7 +116,8 @@ class EvaluacionContratoController extends Controller
             'proveedor' => $proveedor,
             'productos' => $productos,
             'condiciones_pago' => $condiciones_pago,
-            'condiciones_envio' => $condiciones_envio
+            'condiciones_envio' => $condiciones_envio,
+            'variables' => $variables
         ]);
     }
 }
