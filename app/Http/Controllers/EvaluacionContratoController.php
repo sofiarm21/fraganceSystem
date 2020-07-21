@@ -16,6 +16,8 @@ class EvaluacionContratoController extends Controller
 
     public function evaluar($id_productor, $id_proveedor, Request $request){
 
+        $productor = Productor::findOrFail($id_productor);
+        $proveedor = Proveedor::findOrFail($id_proveedor);
 
         $formula_inicial = DB::table('sms_eval_criterio')
         ->join('sms_escala','sms_eval_criterio.id_productor','=', 'sms_eval_criterio.id_productor')
@@ -57,8 +59,8 @@ class EvaluacionContratoController extends Controller
         var_dump($aprobado);
 
         return view('evaluacionResultado', [
-            'id_productor' => $id_productor,
-            'id_proveedor' => $id_proveedor,
+            'productor' => $productor,
+            'proveedor' => $proveedor,
             'aprobado' => $aprobado
         ]);
 
