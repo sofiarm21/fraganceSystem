@@ -65,13 +65,23 @@ class RegistroProveedorController extends Controller
 
 
            $proveedoresDisponibles=DB::table('sms_hist_membresia_ifra')
+
                ->join('sms_proveedores','sms_proveedores.id','=','sms_hist_membresia_ifra.id_proveedor')
                ->where('sms_hist_membresia_ifra.fecha_fin','=',null)
-               ->join('sms_envio','sms_proveedores.id','=','sms_envio.id_proveedor')
+               ->join('sms_contrato','sms_proveedores.id','=','sms_contrato.id_proveedor')
+               ->where('sms_contrato.id_proveedor', '<>', $id)
+               ->join('sms_envio','sms_contrato.id_productor','=','sms_envio.id_proveedor')
                ->join('sms_p_pais','sms_envio.cod_pais','=','sms_p_pais.cod_pais')
                ->where('sms_p_pais.id_productor','=',$id)
                ->join('sms_paises','sms_p_pais.cod_pais','=','sms_paises.codigo')
-               ->select('sms_proveedores.id AS proveedor_id','sms_proveedores.nombre AS proveedor_nombre', 'sms_p_pais.cod_pais','sms_paises.nombre AS pais_nombre', 'sms_envio.tipo_transporte AS tipo_envio', 'sms_envio.costo AS costo_envio')
+               ->select(
+                   'sms_proveedores.id AS proveedor_id',
+                   'sms_proveedores.nombre AS proveedor_nombre',
+                   'sms_p_pais.cod_pais',
+                   'sms_paises.nombre AS pais_nombre',
+                   'sms_envio.tipo_transporte AS tipo_envio',
+                   'sms_envio.costo AS costo_envio'
+                 )
 
                // ->join('sms_p_pais','sms_proveedores.cod_pais','=','sms_p_pais.cod_pais')
                // ->where('sms_p_pais.id_productor','=',$id)
