@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class='col-12'>
+        <div class='col-12 mt-5'>
             <h5>
                 Productos
             </h5>
@@ -166,6 +166,55 @@
                 </div>
             </div>
             @endforeach
+            @if (count($ingredientes_otros) != 0)
+            <div class='col-12'>
+                <h5>
+                    Otros productos
+                </h5>
+            </div>
+            @endif
+                @foreach ($ingredientes_otros as $ingrediente)
+                <div class='col-4 p-4'>
+                    <div class='card bg-white p-0'>
+                        <div class='productCard card-img-top'>
+
+                        </div>
+                        <div class='card-body'>
+                            <div class='text-secondary'>
+                                <p class='font-weight-bold'>
+                                    {{$ingrediente->nombre}}
+                                </p>
+                                <p class='font-weight-bold'>
+                                    $ {{$ingrediente->precio}} - {{$ingrediente->volml}} ml
+                                </p>
+
+                                <div class='row'>
+                                    <div class='col'>
+                                        Numero IPC
+                                    </div>
+                                    <div class='col'>
+                                        {{$ingrediente->num_ipc}}
+                                    </div>
+                                    <div class='col-12'>
+                                        <hr/>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col'>
+                                        Numero TSCA_CAS
+                                    </div>
+                                    <div class='col'>
+                                        {{$ingrediente->num_tsca_cas}}
+                                    </div>
+                                    <div class='col-12'>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
             <div class='col-12'>
                 <div class='row'>
                     <div class='col-6 mt-5'>

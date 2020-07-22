@@ -110,26 +110,26 @@ class EvaluacionContratoController extends Controller
         // ->distinct()
         // ->get();
 
-        $productos = DB::table('sms_materia_prima_esencias')
-        ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
-        ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
-        ->select(
-            'sms_materia_prima_esencias.codigo',
-            'sms_materia_prima_esencias.nombre',
-            'sms_materia_prima_esencias.nombre_alternativo',
-            'sms_materia_prima_esencias.num_ipc',
-            'sms_materia_prima_esencias.num_tsca_cas',
-            'sms_materia_prima_esencias.num_einecs',
-            'sms_materia_prima_esencias.descripcion_visual',
-            'sms_materia_prima_esencias.vida_util',
-            'sms_materia_prima_esencias.solubilidad',
-            'sms_materia_prima_esencias.inflamabilidad',
-            'sms_materia_prima_esencias.proceso',
-            'sms_presentacion_mp.precio',
-            'sms_presentacion_mp.volml'
-        )
-        ->distinct()
-        ->get();
+        // $productos = DB::table('sms_materia_prima_esencias')
+        // ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
+        // ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
+        // ->select(
+        //     'sms_materia_prima_esencias.codigo',
+        //     'sms_materia_prima_esencias.nombre',
+        //     'sms_materia_prima_esencias.nombre_alternativo',
+        //     'sms_materia_prima_esencias.num_ipc',
+        //     'sms_materia_prima_esencias.num_tsca_cas',
+        //     'sms_materia_prima_esencias.num_einecs',
+        //     'sms_materia_prima_esencias.descripcion_visual',
+        //     'sms_materia_prima_esencias.vida_util',
+        //     'sms_materia_prima_esencias.solubilidad',
+        //     'sms_materia_prima_esencias.inflamabilidad',
+        //     'sms_materia_prima_esencias.proceso',
+        //     'sms_presentacion_mp.precio',
+        //     'sms_presentacion_mp.volml'
+        // )
+        // ->distinct()
+        // ->get();
 
 
         //verificar cuando existan contratos
@@ -179,30 +179,30 @@ class EvaluacionContratoController extends Controller
         // ->distinct()
         // ->get();
 
-        $productos_contratados = DB::table('sms_contrato')
-        ->join('sms_det_contrato','sms_contrato.codigo','=','sms_det_contrato.cod_contrato')
-        ->where('sms_contrato.id_proveedor', '=', $id_proveedor)
-        ->join('sms_materia_prima_esencias','sms_det_contrato.cod_mp_esencia','=','sms_materia_prima_esencias.codigo')
-        ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
-        ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
-        ->select(
-            'sms_materia_prima_esencias.codigo',
-            'sms_materia_prima_esencias.nombre',
-            'sms_materia_prima_esencias.nombre_alternativo',
-            'sms_materia_prima_esencias.num_ipc',
-            'sms_materia_prima_esencias.num_tsca_cas',
-            'sms_materia_prima_esencias.num_einecs',
-            'sms_materia_prima_esencias.descripcion_visual',
-            'sms_materia_prima_esencias.vida_util',
-            'sms_materia_prima_esencias.solubilidad',
-            'sms_materia_prima_esencias.inflamabilidad',
-            'sms_materia_prima_esencias.proceso',
-            'sms_contrato.exclusividad',
-            'sms_presentacion_mp.precio',
-            'sms_presentacion_mp.volml'
-        )
-        ->distinct()
-        ->get();
+        // $productos_contratados = DB::table('sms_contrato')
+        // ->join('sms_det_contrato','sms_contrato.codigo','=','sms_det_contrato.cod_contrato')
+        // ->where('sms_contrato.id_proveedor', '=', $id_proveedor)
+        // ->join('sms_materia_prima_esencias','sms_det_contrato.cod_mp_esencia','=','sms_materia_prima_esencias.codigo')
+        // ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
+        // ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
+        // ->select(
+        //     'sms_materia_prima_esencias.codigo',
+        //     'sms_materia_prima_esencias.nombre',
+        //     'sms_materia_prima_esencias.nombre_alternativo',
+        //     'sms_materia_prima_esencias.num_ipc',
+        //     'sms_materia_prima_esencias.num_tsca_cas',
+        //     'sms_materia_prima_esencias.num_einecs',
+        //     'sms_materia_prima_esencias.descripcion_visual',
+        //     'sms_materia_prima_esencias.vida_util',
+        //     'sms_materia_prima_esencias.solubilidad',
+        //     'sms_materia_prima_esencias.inflamabilidad',
+        //     'sms_materia_prima_esencias.proceso',
+        //     'sms_contrato.exclusividad',
+        //     'sms_presentacion_mp.precio',
+        //     'sms_presentacion_mp.volml'
+        // )
+        // ->distinct()
+        // ->get();
 
 
         // $productos = DB::table('sms_materia_prima_esencias')
@@ -324,15 +324,24 @@ class EvaluacionContratoController extends Controller
         })
          ->get();
 
+         $otras_materias_disponibles = DB::table('sms_componente_ing_otros')
+         ->join('sms_presentacion_mp', 'sms_componente_ing_otros.codigo','=','sms_presentacion_mp.cod_componente_ing')
+         ->select(
+             'sms_componente_ing_otros.codigo',
+             'sms_componente_ing_otros.nombre',
+             'sms_componente_ing_otros.ipc AS num_ipc',
+             'sms_componente_ing_otros.tsca_cas AS num_tsca_cas',
+             'sms_presentacion_mp.precio',
+             'sms_presentacion_mp.volml'
+         )
+         ->whereNotExists(function ($query) {
+              $query->select(DB::raw(1))
+                  ->from('sms_det_contrato')
+                  ->join('sms_contrato', 'sms_det_contrato.cod_contrato','=','sms_contrato.codigo')
+                  ->whereRaw('sms_det_contrato.cod_componente_ing = sms_componente_ing_otros.codigo AND sms_contrato.exclusividad = true');
 
-
-        foreach ($productos_disponibles as $producto){
-            var_dump($producto->nombre);
-        }
-
-
-
-
+         })
+          ->get();
 
         $condiciones_pago = DB::table('sms_condicion_pago')
         ->leftJoin('sms_cuotas','sms_condicion_pago.codigo','=','sms_cuotas.cod_cond_pago')
@@ -374,6 +383,7 @@ class EvaluacionContratoController extends Controller
             'proveedor' => $proveedor,
             'id_proveedor' => $id_proveedor,
             'productos' => $productos_disponibles,
+            'ingredientes_otros' => $otras_materias_disponibles,
             'condiciones_pago' => $condiciones_pago,
             'condiciones_envio' => $condiciones_envio,
             'variables' => $variables
