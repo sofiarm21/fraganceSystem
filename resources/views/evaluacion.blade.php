@@ -5,7 +5,7 @@
 
 @section('content')
 
-    <div class='Evaluacion row justify-content-center align-items-center'>
+    <div class='Evaluacion row justify-content-center align-items-center mt-5'>
 
         @foreach ($productores as $productor)
             <div class='col-7 py-2'>

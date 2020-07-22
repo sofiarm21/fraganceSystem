@@ -326,6 +326,7 @@ class EvaluacionContratoController extends Controller
 
          $otras_materias_disponibles = DB::table('sms_componente_ing_otros')
          ->join('sms_presentacion_mp', 'sms_componente_ing_otros.codigo','=','sms_presentacion_mp.cod_componente_ing')
+         ->where('sms_componente_ing_otros.id_proveedor','=',$id_proveedor)
          ->select(
              'sms_componente_ing_otros.codigo',
              'sms_componente_ing_otros.nombre',
