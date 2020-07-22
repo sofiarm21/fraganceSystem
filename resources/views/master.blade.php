@@ -25,8 +25,12 @@
             .primary{
                 color: #523DD7
             }
-            h1,h2,h3{
+            h1,h2,h3,h4,h5{
                 color:  #523DD7
+            }
+            .productCard{
+                background: #523DD7;
+                height: 50px;
             }
 
         </style>
