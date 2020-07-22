@@ -18,7 +18,9 @@ class FormulaInicialController extends Controller
     public function create($id, Request $request){
 
         $productor = Productor::findOrFail($id);
-        $variables = Variable::all();
+        $variables = DB::table('sms_variable')
+        ->where('sms_variable.tipo','=','i')
+        ->get();
         $sum = 0;
         $escala = DB::table('sms_escala')
         ->select('sms_escala.rango_inicial', 'sms_escala.rango_final')
@@ -69,6 +71,7 @@ class FormulaInicialController extends Controller
         DB::table('sms_eval_criterio')
             -> where('fecha_final', null)
             -> where('id_productor', $id)
+            -> where('tipo_formula', 'i')
             ->update(['fecha_final' => date('Y-m-d H:i:s')]);
 
 
@@ -81,6 +84,7 @@ class FormulaInicialController extends Controller
                 ->select('sms_variable.id')
                 ->from('sms_variable')
                 ->where('sms_variable.nombre','=',$variable->nombre)
+                ->where('sms_variable.tipo','=','i')
                 ->value([0]);
             $criterio->fecha_inicial = date('Y-m-d H:i:s');
             $criterio->peso = $request->input($variable->id);
@@ -150,7 +154,9 @@ class FormulaInicialController extends Controller
     public function view($id){
 
         $productor = Productor::findOrFail($id);
-        $variables = Variable::all();
+        $variables = DB::table('sms_variable')
+        ->where('sms_variable.tipo','=','i')
+        ->get();
         $escala = DB::table('sms_escala')
         ->select('sms_escala.rango_inicial', 'sms_escala.rango_final')
         ->from('sms_escala')
@@ -158,7 +164,7 @@ class FormulaInicialController extends Controller
         ->where('sms_escala.fecha_final','=',null)
         ->get();
 
-        var_dump($escala);
+
 
         return view('formulaInicial', [
             'productor' => $productor,
