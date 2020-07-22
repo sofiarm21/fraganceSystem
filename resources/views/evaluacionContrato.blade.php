@@ -63,7 +63,7 @@
                                 {{$producto->nombre}}
                             </p>
                             <p class='font-weight-bold'>
-                                $ {{$producto->precio}}     -     {{$producto->volml}} ml
+                                $ {{$producto->precio}} - {{$producto->volml}} ml
                             </p>
                             <div class='row '>
                                 <div class='col'>

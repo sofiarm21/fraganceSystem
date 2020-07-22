@@ -14,9 +14,73 @@ class GeneracionContratoController extends Controller
 
     function getProductosDisponibles(int $id_proveedor){
 
-        $productos = DB::table('sms_materia_prima_esencias')
+        // $productos = DB::table('sms_materia_prima_esencias')
+        // ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
+        // ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
+        // ->select(
+        //     'sms_materia_prima_esencias.codigo',
+        //     'sms_materia_prima_esencias.nombre',
+        //     'sms_materia_prima_esencias.nombre_alternativo',
+        //     'sms_materia_prima_esencias.num_ipc',
+        //     'sms_materia_prima_esencias.num_tsca_cas',
+        //     'sms_materia_prima_esencias.num_einecs',
+        //     'sms_materia_prima_esencias.descripcion_visual',
+        //     'sms_materia_prima_esencias.vida_util',
+        //     'sms_materia_prima_esencias.solubilidad',
+        //     'sms_materia_prima_esencias.inflamabilidad',
+        //     'sms_materia_prima_esencias.proceso',
+        //     'sms_presentacion_mp.precio',
+        //     'sms_presentacion_mp.volml'
+        // )
+        // ->distinct()
+        // ->get();
+
+        // $productos_contratados = DB::table('sms_contrato')
+        // ->join('sms_det_contrato','sms_contrato.codigo','=','sms_det_contrato.cod_contrato')
+        // ->where('sms_contrato.id_proveedor', '=', $id_proveedor)
+        // ->join('sms_materia_prima_esencias','sms_det_contrato.cod_mp_esencia','=','sms_materia_prima_esencias.codigo')
+        // ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
+        // ->select(
+        //     'sms_materia_prima_esencias.codigo',
+        //     'sms_materia_prima_esencias.nombre',
+        //     'sms_materia_prima_esencias.nombre_alternativo',
+        //     'sms_materia_prima_esencias.num_ipc',
+        //     'sms_materia_prima_esencias.num_tsca_cas',
+        //     'sms_materia_prima_esencias.num_einecs',
+        //     'sms_materia_prima_esencias.descripcion_visual',
+        //     'sms_materia_prima_esencias.vida_util',
+        //     'sms_materia_prima_esencias.solubilidad',
+        //     'sms_materia_prima_esencias.inflamabilidad',
+        //     'sms_materia_prima_esencias.proceso',
+        //     'sms_contrato.exclusividad'
+        // )
+        // ->distinct()
+        // ->get();
+
+        // $productos_disponibles = null;
+        //
+        // if (empty($productos_contratados) != false){
+        //     foreach ($productos_contratados as $producto_contratado){
+        //         if ($productos->where($productos->codigo = $producto_contratado->codigo)->exists()){
+        //             if ($producto->codigo == $producto_contratado->codigo){
+        //                 if ($producto_contratado->exclusividad == false){
+        //                     array_push($productos_disponibles, $producto_contratado);
+        //                 }
+        //             }
+        //         }else{
+        //
+        //             array_push($productos_disponibles, $producto_contratado);
+        //         }
+        //     }
+        // }else{
+        //     $productos_disponibles = $productos;
+        // }
+        //
+        // return $productos_disponibles;
+
+        $productos_disponibles = DB::table('sms_materia_prima_esencias')
         ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
-        ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
+        ->where('sms_materia_prima_esencias.id_proveedor','=', $id_proveedor)
         ->select(
             'sms_materia_prima_esencias.codigo',
             'sms_materia_prima_esencias.nombre',
@@ -32,51 +96,15 @@ class GeneracionContratoController extends Controller
             'sms_presentacion_mp.precio',
             'sms_presentacion_mp.volml'
         )
-        ->distinct()
-        ->get();
+        ->whereNotExists(function ($query) {
+             $query->select(DB::raw(1))
+                 ->from('sms_det_contrato')
+                 ->join('sms_contrato', 'sms_det_contrato.cod_contrato','=','sms_contrato.codigo')
+                 ->whereRaw('sms_det_contrato.cod_mp_esencia = sms_materia_prima_esencias.codigo AND sms_contrato.exclusividad = true');
 
-        $productos_contratados = DB::table('sms_contrato')
-        ->join('sms_det_contrato','sms_contrato.codigo','=','sms_det_contrato.cod_contrato')
-        ->where('sms_contrato.id_proveedor', '=', $id_proveedor)
-        ->join('sms_materia_prima_esencias','sms_det_contrato.cod_mp_esencia','=','sms_materia_prima_esencias.codigo')
-        ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
-        ->select(
-            'sms_materia_prima_esencias.codigo',
-            'sms_materia_prima_esencias.nombre',
-            'sms_materia_prima_esencias.nombre_alternativo',
-            'sms_materia_prima_esencias.num_ipc',
-            'sms_materia_prima_esencias.num_tsca_cas',
-            'sms_materia_prima_esencias.num_einecs',
-            'sms_materia_prima_esencias.descripcion_visual',
-            'sms_materia_prima_esencias.vida_util',
-            'sms_materia_prima_esencias.solubilidad',
-            'sms_materia_prima_esencias.inflamabilidad',
-            'sms_materia_prima_esencias.proceso',
-            'sms_contrato.exclusividad'
-        )
-        ->distinct()
-        ->get();
+        })
+         ->get();
 
-        $productos_disponibles = null;
-
-        if (empty($productos_contratados) != false){
-            foreach ($productos_contratados as $producto_contratado){
-                if ($productos->where($productos->codigo = $producto_contratado->codigo)->exists()){
-                    if ($producto->codigo == $producto_contratado->codigo){
-                        if ($producto_contratado->exclusividad == false){
-                            array_push($productos_disponibles, $producto_contratado);
-                        }
-                    }
-                }else{
-
-                    array_push($productos_disponibles, $producto_contratado);
-                }
-            }
-        }else{
-            $productos_disponibles = $productos;
-        }
-
-        return $productos_disponibles;
 
     }
 
@@ -118,6 +146,11 @@ class GeneracionContratoController extends Controller
 
 
     public function create($id_productor, $id_proveedor, Request $request){
+
+
+        if(($request->producto_codigo == null) || ($request->condiciones_pago == null) || ($request->condicion_envio == null)){
+            return back()->withInput();
+        }
 
         $productor = Productor::findOrFail($id_productor);
 
@@ -212,9 +245,72 @@ class GeneracionContratoController extends Controller
 
 
 
-        $productos = DB::table('sms_materia_prima_esencias')
+        // $productos = DB::table('sms_materia_prima_esencias')
+        // ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
+        // ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
+        // ->select(
+        //     'sms_materia_prima_esencias.codigo',
+        //     'sms_materia_prima_esencias.nombre',
+        //     'sms_materia_prima_esencias.nombre_alternativo',
+        //     'sms_materia_prima_esencias.num_ipc',
+        //     'sms_materia_prima_esencias.num_tsca_cas',
+        //     'sms_materia_prima_esencias.num_einecs',
+        //     'sms_materia_prima_esencias.descripcion_visual',
+        //     'sms_materia_prima_esencias.vida_util',
+        //     'sms_materia_prima_esencias.solubilidad',
+        //     'sms_materia_prima_esencias.inflamabilidad',
+        //     'sms_materia_prima_esencias.proceso',
+        //     'sms_presentacion_mp.precio',
+        //     'sms_presentacion_mp.volml'
+        // )
+        // ->distinct()
+        // ->get();
+
+
+        // $productos_contratados = DB::table('sms_contrato')
+        // ->join('sms_det_contrato','sms_contrato.codigo','=','sms_det_contrato.cod_contrato')
+        // ->where('sms_contrato.id_proveedor', '=', $id_proveedor)
+        // ->join('sms_materia_prima_esencias','sms_det_contrato.cod_mp_esencia','=','sms_materia_prima_esencias.codigo')
+        // ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
+        // ->select(
+        //     'sms_materia_prima_esencias.codigo',
+        //     'sms_materia_prima_esencias.nombre',
+        //     'sms_materia_prima_esencias.nombre_alternativo',
+        //     'sms_materia_prima_esencias.num_ipc',
+        //     'sms_materia_prima_esencias.num_tsca_cas',
+        //     'sms_materia_prima_esencias.num_einecs',
+        //     'sms_materia_prima_esencias.descripcion_visual',
+        //     'sms_materia_prima_esencias.vida_util',
+        //     'sms_materia_prima_esencias.solubilidad',
+        //     'sms_materia_prima_esencias.inflamabilidad',
+        //     'sms_materia_prima_esencias.proceso',
+        //     'sms_contrato.exclusividad'
+        // )
+        // ->distinct()
+        // ->get();
+
+        // $productos_disponibles = null;
+        //
+        // if (empty($productos_contratados) != false){
+        //     foreach ($productos_contratados as $producto_contratado){
+        //         if ($productos->where($productos->codigo = $producto_contratado->codigo)->exists()){
+        //             if ($producto->codigo == $producto_contratado->codigo){
+        //                 if ($producto_contratado->exclusividad == false){
+        //                     array_push($productos_disponibles, $producto_contratado);
+        //                 }
+        //             }
+        //         }else{
+        //
+        //             array_push($productos_disponibles, $producto_contratado);
+        //         }
+        //     }
+        // }else{
+        //     $productos_disponibles = $productos;
+        // }
+
+        $productos_disponibles = DB::table('sms_materia_prima_esencias')
         ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
-        ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
+        ->where('sms_materia_prima_esencias.id_proveedor','=', $id_proveedor)
         ->select(
             'sms_materia_prima_esencias.codigo',
             'sms_materia_prima_esencias.nombre',
@@ -230,50 +326,14 @@ class GeneracionContratoController extends Controller
             'sms_presentacion_mp.precio',
             'sms_presentacion_mp.volml'
         )
-        ->distinct()
-        ->get();
+        ->whereNotExists(function ($query) {
+             $query->select(DB::raw(1))
+                 ->from('sms_det_contrato')
+                 ->join('sms_contrato', 'sms_det_contrato.cod_contrato','=','sms_contrato.codigo')
+                 ->whereRaw('sms_det_contrato.cod_mp_esencia = sms_materia_prima_esencias.codigo AND sms_contrato.exclusividad = true');
 
-
-        $productos_contratados = DB::table('sms_contrato')
-        ->join('sms_det_contrato','sms_contrato.codigo','=','sms_det_contrato.cod_contrato')
-        ->where('sms_contrato.id_proveedor', '=', $id_proveedor)
-        ->join('sms_materia_prima_esencias','sms_det_contrato.cod_mp_esencia','=','sms_materia_prima_esencias.codigo')
-        ->where('sms_materia_prima_esencias.id_proveedor', '=', $id_proveedor)
-        ->select(
-            'sms_materia_prima_esencias.codigo',
-            'sms_materia_prima_esencias.nombre',
-            'sms_materia_prima_esencias.nombre_alternativo',
-            'sms_materia_prima_esencias.num_ipc',
-            'sms_materia_prima_esencias.num_tsca_cas',
-            'sms_materia_prima_esencias.num_einecs',
-            'sms_materia_prima_esencias.descripcion_visual',
-            'sms_materia_prima_esencias.vida_util',
-            'sms_materia_prima_esencias.solubilidad',
-            'sms_materia_prima_esencias.inflamabilidad',
-            'sms_materia_prima_esencias.proceso',
-            'sms_contrato.exclusividad'
-        )
-        ->distinct()
-        ->get();
-
-        $productos_disponibles = null;
-
-        if (empty($productos_contratados) != false){
-            foreach ($productos_contratados as $producto_contratado){
-                if ($productos->where($productos->codigo = $producto_contratado->codigo)->exists()){
-                    if ($producto->codigo == $producto_contratado->codigo){
-                        if ($producto_contratado->exclusividad == false){
-                            array_push($productos_disponibles, $producto_contratado);
-                        }
-                    }
-                }else{
-
-                    array_push($productos_disponibles, $producto_contratado);
-                }
-            }
-        }else{
-            $productos_disponibles = $productos;
-        }
+        })
+         ->get();
 
         $condiciones_pago = DB::table('sms_condicion_pago')
         ->leftJoin('sms_cuotas','sms_condicion_pago.codigo','=','sms_cuotas.cod_cond_pago')
