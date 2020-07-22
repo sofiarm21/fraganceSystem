@@ -23,6 +23,7 @@ class EvaluacionContratoController extends Controller
         ->join('sms_escala','sms_eval_criterio.id_productor','=', 'sms_eval_criterio.id_productor')
         ->where('sms_eval_criterio.id_productor','=',$id_productor)
         ->where('sms_eval_criterio.fecha_final','=',null)
+        ->where('sms_eval_criterio.tipo_formula','=','i')
         ->where('sms_escala.fecha_final','=',null)
         ->select(
             'sms_eval_criterio.id_variable',
@@ -340,9 +341,9 @@ class EvaluacionContratoController extends Controller
             'sms_condicion_pago.tipo',
             'sms_condicion_pago.cantidad_cuotas',
             'sms_cuotas.porcentaje_pago AS pago_porcentajes',
-            'sms_cuotas.dias_para_pago AS pago_dias',
-            'sms_cuotas.recargo',
-            'sms_cuotas.descuento',
+            'sms_cuotas.tiempo_para_pago AS pago_dias',
+            'sms_cuotas.porcentaje_recargo',
+            'sms_cuotas.porcentaje_descuento',
             'sms_cuotas.cod_cond_pago',
         )
         ->distinct()
@@ -359,10 +360,13 @@ class EvaluacionContratoController extends Controller
         ->select('sms_eval_criterio.id_variable', 'sms_eval_criterio.peso')
         ->from('sms_eval_criterio')
         ->where('sms_eval_criterio.id_productor','=',$id_productor)
+        ->where('sms_eval_criterio.tipo_formula','=','i')
         ->where('sms_eval_criterio.fecha_final','=',null)
         ->get();
 
-        $variables = Variable::all();
+        $variables = DB::table('sms_variable')
+        ->where('sms_variable.tipo','=','i')
+        ->get();
 
 
         return view('evaluacionContrato', [

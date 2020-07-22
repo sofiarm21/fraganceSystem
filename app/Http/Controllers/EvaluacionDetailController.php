@@ -26,10 +26,11 @@ class EvaluacionDetailController extends Controller
         ->select('sms_eval_criterio.id_variable', 'sms_eval_criterio.peso')
         ->from('sms_eval_criterio')
         ->where('sms_eval_criterio.id_productor','=',$id)
+        ->where('sms_eval_criterio.tipo_formula','=','i')
         ->where('sms_eval_criterio.fecha_final','=',null)
         ->get();
 
-    
+
 
 
 

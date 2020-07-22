@@ -104,8 +104,6 @@ class GeneracionContratoController extends Controller
 
         })
          ->get();
-
-
     }
 
 
@@ -117,9 +115,9 @@ class GeneracionContratoController extends Controller
             'sms_condicion_pago.tipo',
             'sms_condicion_pago.cantidad_cuotas',
             'sms_cuotas.porcentaje_pago AS pago_porcentajes',
-            'sms_cuotas.dias_para_pago AS pago_dias',
-            'sms_cuotas.recargo',
-            'sms_cuotas.descuento',
+            'sms_cuotas.tiempo_para_pago AS pago_dias',
+            'sms_cuotas.porcentaje_recargo',
+            'sms_cuotas.porcentaje_descuento',
             'sms_cuotas.cod_cond_pago',
             'sms_condicion_pago.codigo'
         )
@@ -308,60 +306,36 @@ class GeneracionContratoController extends Controller
         //     $productos_disponibles = $productos;
         // }
 
-        $productos_disponibles = DB::table('sms_materia_prima_esencias')
-        ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
-        ->where('sms_materia_prima_esencias.id_proveedor','=', $id_proveedor)
-        ->select(
-            'sms_materia_prima_esencias.codigo',
-            'sms_materia_prima_esencias.nombre',
-            'sms_materia_prima_esencias.nombre_alternativo',
-            'sms_materia_prima_esencias.num_ipc',
-            'sms_materia_prima_esencias.num_tsca_cas',
-            'sms_materia_prima_esencias.num_einecs',
-            'sms_materia_prima_esencias.descripcion_visual',
-            'sms_materia_prima_esencias.vida_util',
-            'sms_materia_prima_esencias.solubilidad',
-            'sms_materia_prima_esencias.inflamabilidad',
-            'sms_materia_prima_esencias.proceso',
-            'sms_presentacion_mp.precio',
-            'sms_presentacion_mp.volml'
-        )
-        ->whereNotExists(function ($query) {
-             $query->select(DB::raw(1))
-                 ->from('sms_det_contrato')
-                 ->join('sms_contrato', 'sms_det_contrato.cod_contrato','=','sms_contrato.codigo')
-                 ->whereRaw('sms_det_contrato.cod_mp_esencia = sms_materia_prima_esencias.codigo AND sms_contrato.exclusividad = true');
 
-        })
-         ->get();
+         $productos_disponibles = DB::table('sms_materia_prima_esencias')
+         ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
+         ->where('sms_materia_prima_esencias.id_proveedor','=', $id_proveedor)
+         ->select(
+             'sms_materia_prima_esencias.codigo',
+             'sms_materia_prima_esencias.nombre',
+             'sms_materia_prima_esencias.nombre_alternativo',
+             'sms_materia_prima_esencias.num_ipc',
+             'sms_materia_prima_esencias.num_tsca_cas',
+             'sms_materia_prima_esencias.num_einecs',
+             'sms_materia_prima_esencias.descripcion_visual',
+             'sms_materia_prima_esencias.vida_util',
+             'sms_materia_prima_esencias.solubilidad',
+             'sms_materia_prima_esencias.inflamabilidad',
+             'sms_materia_prima_esencias.proceso',
+             'sms_presentacion_mp.precio',
+             'sms_presentacion_mp.volml'
+         )
+         ->whereNotExists(function ($query) {
+              $query->select(DB::raw(1))
+                  ->from('sms_det_contrato')
+                  ->join('sms_contrato', 'sms_det_contrato.cod_contrato','=','sms_contrato.codigo')
+                  ->whereRaw('sms_det_contrato.cod_mp_esencia = sms_materia_prima_esencias.codigo AND sms_contrato.exclusividad = true');
 
-        $condiciones_pago = DB::table('sms_condicion_pago')
-        ->leftJoin('sms_cuotas','sms_condicion_pago.codigo','=','sms_cuotas.cod_cond_pago')
-        ->where('sms_condicion_pago.id_proveedor','=',$id_proveedor)
-        ->select(
-            'sms_condicion_pago.tipo',
-            'sms_condicion_pago.cantidad_cuotas',
-            'sms_cuotas.porcentaje_pago AS pago_porcentajes',
-            'sms_cuotas.dias_para_pago AS pago_dias',
-            'sms_cuotas.recargo',
-            'sms_cuotas.descuento',
-            'sms_cuotas.cod_cond_pago',
-            'sms_condicion_pago.codigo'
-        )
-        ->distinct()
-        ->get();
+         })
+          ->get();
 
-        $condiciones_envio = DB::table('sms_envio')
-        ->join('sms_paises','sms_envio.cod_pais','=','sms_paises.codigo')
-        ->where('sms_envio.id_proveedor','=',$id_proveedor)
-        ->select(
-            'sms_envio.tipo_transporte AS envio_transporte',
-            'sms_envio.costo AS envio_costo',
-            'sms_envio.cod_pais',
-            'sms_paises.nombre AS envio_pais'
-        )
-        ->distinct()
-        ->get();
+         $condiciones_pago = self::getCondicionesPago($id_proveedor);
+         $condiciones_envio = self::getCondicionesEnvio($id_proveedor);
 
         return view('evaluacionGeneracionContrato', [
             'productor' => $productor,
