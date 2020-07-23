@@ -10,6 +10,27 @@ use App\Escala;
 
 class EvaluacionDetailController extends Controller
 {
+
+    function getContratos($id_productor){
+
+        $contratos = DB::table('sms_contrato')
+        ->join('sms_proveedores','sms_contrato.id_proveedor','=','sms_proveedores.id')
+        ->where('sms_contrato.id_productor','=',$id_productor)
+        ->select(
+                'sms_proveedores.nombre',
+                'sms_contrato.id_proveedor',
+                'sms_contrato.codigo',
+                'sms_contrato.fecha'
+            )
+        ->distinct()
+        ->get();
+
+        return $contratos;
+    }
+
+
+
+
     public function view($id){
 
         $productor = Productor::findOrFail($id);
@@ -44,8 +65,8 @@ class EvaluacionDetailController extends Controller
         return view('evaluacionDetail', [
             'productor' => $productor,
             'escala' => $escala,
-            'formula_inicial' => $formula_inicial
-
+            'formula_inicial' => $formula_inicial,
+            'contratos' => self::getContratos($id)
         ]);
     }
 }
