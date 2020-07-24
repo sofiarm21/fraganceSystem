@@ -360,9 +360,16 @@ class EvaluacionContratoController extends Controller
         ->get();
 
         $condiciones_envio = DB::table('sms_envio')
-        ->join('sms_paises','sms_envio.cod_pais','=','sms_paises.codigo')
+        ->join('sms_p_pais','sms_envio.cod_pais','=','sms_p_pais.cod_pais')
+        ->where('sms_p_pais.id_productor','=',$id_productor)
+        ->join('sms_paises','sms_p_pais.cod_pais','=','sms_paises.codigo')
         ->where('sms_envio.id_proveedor','=',$id_proveedor)
-        ->select('sms_envio.tipo_transporte AS envio_transporte','sms_envio.costo AS envio_costo','sms_paises.nombre AS envio_pais')
+        ->select(
+            'sms_envio.tipo_transporte AS envio_transporte',
+            'sms_envio.costo AS envio_costo',
+            'sms_envio.cod_pais',
+            'sms_paises.nombre AS envio_pais'
+        )
         ->distinct()
         ->get();
 

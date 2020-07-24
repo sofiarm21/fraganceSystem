@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('title','Fragance System')
-@section('pageTitle', 'Evaluacion')
+@section('pageTitle', 'Evaluación')
 
 @section('content')
 
@@ -30,6 +30,52 @@
                     Para registrar un nuevo proveedor debe tener una formula de evaluación inicial creada
                 </p>
             @endif
+
+            <div class='row mt-5'>
+
+                @foreach ($contratos as $contrato)
+
+                    @if(\Carbon\Carbon::now()->diffInDays($contrato->fecha.'+1 year, -2 months', false) > 0)
+                        <div class="card col-3 mx-2 bg-white" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{$contrato->nombre}}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Contrato</h6>
+                                <p class="card-text font-weight-bold">Id contrato</p>
+                                <p class="card-text">{{$contrato->codigo}}</p>
+                                <p class="card-text">Fecha de creación <br/> {{$contrato->fecha}}</p>
+                                <p class="card-text">Fecha de finalización <br/> {{ date('Y-m-d',strtotime($contrato->fecha.'+1 year'))}}</p>
+                                <a href='/Evaluacion/detalle-contrato/{{$productor->id}}/{{$contrato->id_proveedor}}/{{$contrato->codigo}}' class="card-link">
+                                    Detalle
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+
+                <div class='col-12 mt-5'>
+                    <h5>
+                        Contratos proximos a vencerse
+                    </h5>
+                </div>
+
+                @foreach ($contratos as $contrato)
+
+                    @if($data_difference = \Carbon\Carbon::now()->diffInDays($contrato->fecha.'+1 year, -2 months', false) < 0)
+                        <div class="card col-3 mx-2 bg-white" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{$contrato->nombre}}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Contrato</h6>
+                                <p class="card-text">Fecha de creación <br/> {{$contrato->fecha}}</p>
+                                <p class="card-text">Fecha de finalización <br/> {{ date('Y-m-d',strtotime($contrato->fecha.'+1 year'))}}</p>
+                                <p class="card-text">{{$contrato->codigo}}</p>
+                                <a href='/Evaluacion/detalle-contrato/{{$productor->id}}/{{$contrato->id_proveedor}}/{{$contrato->codigo}}' class="card-link">Detalle</a>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+
+            </div>
+
         </div>
         <div class='col-12 mt-5'>
             <h5 class='text text-secondary'>
@@ -53,7 +99,7 @@
             @endif
 
         </div>
-        <div class='col-3'>
+        <div class='col-3 mb-5'>
             <a href='/Evaluacion/creacion-escala/{{$productor->id}}' class='text-light'>
                 <button type='button' class='btn btn-info mt-5'>
                     Crear nueva escala
