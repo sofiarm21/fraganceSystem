@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Compras;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 use App\Productor;
+use App\Escala;
 
-class ComprasController extends Controller
+class ComprasMenuController extends Controller
 {
     function getContratosActivos($id_productor){
 
@@ -16,6 +19,7 @@ class ComprasController extends Controller
         ->where('sms_contrato.fecha_cancelacion','=',null)
         ->where('sms_contrato.motivo_no_renovacion','=',null)
         ->select(
+                'sms_proveedores.id',
                 'sms_proveedores.nombre',
                 'sms_contrato.id_proveedor',
                 'sms_contrato.codigo',
@@ -28,12 +32,15 @@ class ComprasController extends Controller
     }
 
 
-    public function view(){
+    public function view($id){
 
-        $productores = Productor::all();
-
-        return view('compras', [
-            'productores' => $productores,
+        $productor = Productor::findOrFail($id);
+        $proveedores = self::getContratosActivos($id);
+        
+        return view('compras/comprasMenu', [
+            'proveedores' => $proveedores,
+            'productor' => $productor
         ]);
+
     }
 }
