@@ -68,9 +68,9 @@ class RegistroProveedorController extends Controller
 
                ->join('sms_proveedores','sms_proveedores.id','=','sms_hist_membresia_ifra.id_proveedor')
                ->where('sms_hist_membresia_ifra.fecha_fin','=',null)
-               ->join('sms_contrato','sms_proveedores.id','=','sms_contrato.id_proveedor')
-               ->where('sms_contrato.id_proveedor', '<>', $id)
-               ->join('sms_envio','sms_contrato.id_productor','=','sms_envio.id_proveedor')
+               // ->leftJoin('sms_contrato','sms_proveedores.id','=','sms_contrato.id_proveedor')
+               // ->where('sms_contrato.id_proveedor', '<>', $id)
+              ->join('sms_envio','sms_proveedores.id','=','sms_envio.id_proveedor')
                ->join('sms_p_pais','sms_envio.cod_pais','=','sms_p_pais.cod_pais')
                ->where('sms_p_pais.id_productor','=',$id)
                ->join('sms_paises','sms_p_pais.cod_pais','=','sms_paises.codigo')

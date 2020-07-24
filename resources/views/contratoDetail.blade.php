@@ -316,14 +316,23 @@
                 Este contrato tendra vigencia de un año desde el momento de su generación.
             </p>
             <p class='text-secondary font-weight-bold'>
-                Fecha finalizacion: {{ date('d-m-Y',strtotime('+1 year'))}}
+                Fecha finalización: {{date('Y-m-d',strtotime($contrato->fecha.'+1 year'))}}
             </p>
             <p class='text-secondary'>
                 Se debe evaluar esta relación dos meses antes de la culminación del contrato
             </p>
             <p class='text-secondary font-weight-bold'>
-                Fecha evaluación: {{ date('d-m-Y',strtotime('+1 year , -2 months'))}}
+                Fecha evaluación: {{ date('d-m-Y',strtotime($contrato->fecha.'+1 year , -2 months'))}}
             </p>
+            @if($contrato->exclusividad)
+            <p class='text-secondary'>
+                Exlusividad
+            </p>
+            <p class='text-secondary font-weight-bold'>
+
+                    Este contrato es una relación exclusiva entre el productor - proveedor
+            </p>
+            @endif
         </div>
 
 

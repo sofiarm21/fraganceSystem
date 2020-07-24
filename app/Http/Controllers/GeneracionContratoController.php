@@ -79,7 +79,6 @@ class GeneracionContratoController extends Controller
         // return $productos_disponibles;
 
         $productos_disponibles = DB::table('sms_materia_prima_esencias')
-        ->join('sms_presentacion_mp', 'sms_materia_prima_esencias.codigo','=','sms_presentacion_mp.cod_materia_prima')
         ->where('sms_materia_prima_esencias.id_proveedor','=', $id_proveedor)
         ->select(
             'sms_materia_prima_esencias.codigo',
@@ -93,8 +92,6 @@ class GeneracionContratoController extends Controller
             'sms_materia_prima_esencias.solubilidad',
             'sms_materia_prima_esencias.inflamabilidad',
             'sms_materia_prima_esencias.proceso',
-            'sms_presentacion_mp.precio',
-            'sms_presentacion_mp.volml'
         )
         ->whereNotExists(function ($query) {
              $query->select(DB::raw(1))
@@ -110,14 +107,12 @@ class GeneracionContratoController extends Controller
 
     function getMateriasPrimasDisponibles($id_proveedor){
         $otras_materias_disponibles = DB::table('sms_componente_ing_otros')
-        ->join('sms_presentacion_mp', 'sms_componente_ing_otros.codigo','=','sms_presentacion_mp.cod_componente_ing')
+        ->where('sms_componente_ing_otros.id_proveedor','=',$id_proveedor)
         ->select(
             'sms_componente_ing_otros.codigo',
             'sms_componente_ing_otros.nombre',
             'sms_componente_ing_otros.ipc AS num_ipc',
             'sms_componente_ing_otros.tsca_cas AS num_tsca_cas',
-            'sms_presentacion_mp.precio',
-            'sms_presentacion_mp.volml'
         )
         ->whereNotExists(function ($query) {
              $query->select(DB::raw(1))
@@ -151,9 +146,11 @@ class GeneracionContratoController extends Controller
     }
 
 
-    function getCondicionesEnvio($id_proveedor){
+    function getCondicionesEnvio($id_productor, $id_proveedor){
         $condiciones_envio = DB::table('sms_envio')
-        ->join('sms_paises','sms_envio.cod_pais','=','sms_paises.codigo')
+        ->join('sms_p_pais','sms_envio.cod_pais','=','sms_p_pais.cod_pais')
+        ->where('sms_p_pais.id_productor','=',$id_productor)
+        ->join('sms_paises','sms_p_pais.cod_pais','=','sms_paises.codigo')
         ->where('sms_envio.id_proveedor','=',$id_proveedor)
         ->select(
             'sms_envio.tipo_transporte AS envio_transporte',
@@ -193,7 +190,7 @@ class GeneracionContratoController extends Controller
         $productos_disponibles = self::getProductosDisponibles($id_proveedor);
         $otras_materias_disponibles = self::getMateriasPrimasDisponibles($id_proveedor);
         $condiciones_pago = self::getCondicionesPago($id_proveedor);
-        $condiciones_envio = self::getCondicionesEnvio($id_proveedor);
+        $condiciones_envio = self::getCondicionesEnvio($id_productor, $id_proveedor);
 
         foreach($request->producto_codigo as $producto_codigo){
 
@@ -207,7 +204,7 @@ class GeneracionContratoController extends Controller
                 );
 
         }
-
+        if ($request->ingrediente_codigo != null){
         foreach($request->ingrediente_codigo as $ingrediente_codigo){
 
                 DB::table('sms_det_contrato')->insert(
@@ -219,6 +216,7 @@ class GeneracionContratoController extends Controller
                     ]
                 );
 
+        }
         }
 
         foreach($request->condiciones_pago as $cod_condicion_pago){
@@ -349,7 +347,7 @@ class GeneracionContratoController extends Controller
         $productos_disponibles = self::getProductosDisponibles($id_proveedor);
          $otras_materias_disponibles = self::getMateriasPrimasDisponibles($id_proveedor);
          $condiciones_pago = self::getCondicionesPago($id_proveedor);
-         $condiciones_envio = self::getCondicionesEnvio($id_proveedor);
+         $condiciones_envio = self::getCondicionesEnvio($id_productor, $id_proveedor);
 
         return view('evaluacionGeneracionContrato', [
             'productor' => $productor,
