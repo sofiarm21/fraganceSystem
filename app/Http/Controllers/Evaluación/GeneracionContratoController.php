@@ -251,7 +251,7 @@ class GeneracionContratoController extends Controller
         }
 
 
-        return redirect()->action('EvaluacionDetailController@view', ['id' => $id_productor]);
+        return redirect()->action('Evaluación\EvaluacionDetailController@view', ['id' => $id_productor]);
 
 
 
@@ -351,7 +351,7 @@ class GeneracionContratoController extends Controller
          $condiciones_pago = self::getCondicionesPago($id_proveedor);
          $condiciones_envio = self::getCondicionesEnvio($id_productor, $id_proveedor);
 
-        return view('evaluacionGeneracionContrato', [
+        return view('evaluación/evaluacionGeneracionContrato', [
             'productor' => $productor,
             'proveedor' => $proveedor,
             'productos' => $productos_disponibles,

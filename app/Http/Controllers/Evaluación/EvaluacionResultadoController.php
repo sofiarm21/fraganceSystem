@@ -8,6 +8,6 @@ use Illuminate\Http\Request;
 
 class EvaluacionResultadoController extends Controller
 {
-    return view('evaluacionResultado', [
+    return view('evaluación/evaluacionResultado', [
     ]);
 }

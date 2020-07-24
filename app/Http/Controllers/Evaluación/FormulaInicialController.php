@@ -32,7 +32,7 @@ class FormulaInicialController extends Controller
 
         foreach ($variables as $variable){
             if ($request->input($variable->id) == null){
-                return view('formulaInicial', [
+                return view('evaluación/formulaInicial', [
                     'productor' => $productor,
                     'variables' => $variables,
                     'escala' => $escala,
@@ -40,7 +40,7 @@ class FormulaInicialController extends Controller
                 ]);
             }
             else if ($request->input($variable->id) > $escala[0]->rango_final){
-                return view('formulaInicial', [
+                return view('evaluación/formulaInicial', [
                     'productor' => $productor,
                     'variables' => $variables,
                     'escala' => $escala,
@@ -48,7 +48,7 @@ class FormulaInicialController extends Controller
                 ]);
             }
             else if ($request->input($variable->id) < $escala[0]->rango_inicial){
-                return view('formulaInicial', [
+                return view('evaluación/formulaInicial', [
                     'productor' => $productor,
                     'variables' => $variables,
                     'escala' => $escala,
@@ -59,7 +59,7 @@ class FormulaInicialController extends Controller
         }
 
         if ($sum <> $escala[0]->rango_final){
-            return view('formulaInicial', [
+            return view('evaluación/formulaInicial', [
                 'productor' => $productor,
                 'variables' => $variables,
                 'escala' => $escala,
@@ -95,7 +95,7 @@ class FormulaInicialController extends Controller
 
         }
 
-        return redirect()->action('EvaluacionDetailController@view', ['id' => $id]);
+        return redirect()->action('Evaluación\EvaluacionDetailController@view', ['id' => $id]);
 
 
 
@@ -167,7 +167,7 @@ class FormulaInicialController extends Controller
 
 
 
-        return view('formulaInicial', [
+        return view('evaluación/formulaInicial', [
             'productor' => $productor,
             'variables' => $variables,
             'escala' => $escala,

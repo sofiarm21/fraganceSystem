@@ -97,7 +97,7 @@ class RegistroProveedorController extends Controller
               ->distinct()
               ->get();
 
-        return view('evaluacionRegistroProveedor', [
+        return view('evaluación/evaluacionRegistroProveedor', [
             'proveedores' => $proveedoresDisponibles,
             'productor_id' => $id
         ]);

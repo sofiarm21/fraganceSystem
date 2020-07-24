@@ -63,7 +63,7 @@ class EvaluacionDetailController extends Controller
         //     ->value([0]);
         //
 
-        return view('evaluacionDetail', [
+        return view('evaluación/evaluacionDetail', [
             'productor' => $productor,
             'escala' => $escala,
             'formula_inicial' => $formula_inicial,

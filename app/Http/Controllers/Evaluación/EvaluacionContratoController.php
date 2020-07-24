@@ -62,7 +62,7 @@ class EvaluacionContratoController extends Controller
             $aprobado = true;
         }
 
-        return view('evaluacionResultado', [
+        return view('evaluación/evaluacionResultado', [
             'productor' => $productor,
             'proveedor' => $proveedor,
             'aprobado' => $aprobado
@@ -388,7 +388,7 @@ class EvaluacionContratoController extends Controller
         ->get();
 
 
-        return view('evaluacionContrato', [
+        return view('evaluación/evaluacionContrato', [
             'productor' => $productor,
             'proveedor' => $proveedor,
             'id_proveedor' => $id_proveedor,

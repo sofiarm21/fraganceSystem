@@ -14,7 +14,7 @@ class EvaluacionController extends Controller
 
         $productores = Productor::all();
 
-        return view('evaluacion', [
+        return view('evaluación/evaluacion', [
             'productores' => $productores,
         ]);
     }
