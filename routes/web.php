@@ -14,12 +14,32 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'WelcomeController@index');
-Route::get('/Evaluacion', 'EvaluacionController@index');
+
+Route::get('/Evaluacion', 'Evaluación\EvaluacionController@index');
+Route::get('/Evaluacion/{id}', 'Evaluación\EvaluacionDetailController@view');
+Route::get('/Evaluacion/creacion-formula-inicial/{id}', 'Evaluación\FormulaInicialController@view');
+Route::get('/Evaluacion/creacion-escala/{id}', 'Evaluación\EscalaController@view');
+Route::get('/Evaluacion/registro-proveedor/{id}', 'Evaluación\RegistroProveedorController@view');
+Route::get('/Evaluacion/creacion-contrato/{id_productor}/{id_proveedor}', 'Evaluación\EvaluacionContratoController@view');
+Route::get('/Evaluacion/resultado/{id_productor}/{id_proveedor}', 'Evaluación\EvaluacionResultadoController@view');
+Route::get('/Evaluacion/generacion-contrato/{id_productor}/{id_proveedor}', 'Evaluación\GeneracionContratoController@view');
+Route::get('/Evaluacion/detalle-contrato/{id_productor}/{id_proveedor}/{id_contrato}', 'Evaluación\ContratoDetailController@view');
+Route::post('/Evaluacion/creacion-formula-inicial/create/{id}', 'Evaluación\FormulaInicialController@create');
+Route::post('/Evaluacion/creacion-escala/create/{id}', 'EscalaController@create');
+Route::post('/Evaluacion/creacion-contrato/evaluar/{id_productor}/{ID_PROVEEDOR}', 'Evaluación\EvaluacionContratoController@evaluar');
+Route::post('/Evaluacion/generacion-contrato/create/{id_productor}/{id_proveedor}', 'Evaluación\GeneracionContratoController@create');
+
+
+
 Route::get('/Compras', 'ComprasController@index');
+
 Route::get('/Recomendador', 'RecomendadorController@index');
 
 Route::get('/Productor', 'WelcomeProductorController@index');
 Route::get('/ProductorCatalogo/{id}', 'ProductorController@view');
+
+
+
 
 // Route::get('/', function () {
 //     return view('welcome');

@@ -25,8 +25,12 @@
             .primary{
                 color: #523DD7
             }
-            h1,h2,h3{
+            h1,h2,h3,h4,h5{
                 color:  #523DD7
+            }
+            .productCard{
+                background: #523DD7;
+                height: 50px;
             }
 
         </style>
@@ -34,7 +38,7 @@
     </head>
     <body>
 
-        <div class='Master row justify-content-center py-4  h-100'>
+        <div class='Master row justify-content-center pt-4'>
             <div class='col-10'>
                 <div class='row justify-content-betwen'>
                     <div class='col-6'>

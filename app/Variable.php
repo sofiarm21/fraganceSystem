@@ -4,8 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Productor extends Model
+class Variable extends Model
 {
-    protected $table = 'sms_productores';
+    protected $table = 'sms_variable';
     public $timestamps = false;
 }
