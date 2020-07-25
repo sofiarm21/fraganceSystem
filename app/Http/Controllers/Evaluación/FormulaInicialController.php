@@ -95,7 +95,7 @@ class FormulaInicialController extends Controller
 
         }
 
-        return redirect()->action('EvaluacionDetailController@view', ['id' => $id]);
+        return redirect()->action('Evaluación\EvaluacionDetailController@view', ['id' => $id]);
 
 
 

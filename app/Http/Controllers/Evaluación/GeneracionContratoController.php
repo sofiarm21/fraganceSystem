@@ -251,7 +251,7 @@ class GeneracionContratoController extends Controller
         }
 
 
-        return redirect()->action('EvaluacionDetailController@view', ['id' => $id_productor]);
+        return redirect()->action('Evaluación\EvaluacionDetailController@view', ['id' => $id_productor]);
 
 
 
