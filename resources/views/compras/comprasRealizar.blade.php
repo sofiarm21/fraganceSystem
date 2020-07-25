@@ -95,7 +95,7 @@
                         <div class='row text-secondary'>
                             <div class='col'>
                                  <input type="number" name='producto_otro[]' class="form-control" id="producto"/>
-                                  <input type="hidden" name="producto_otro[]" value="{{ $producto->cod_presentacion}}">
+                                 <input type="hidden" name="producto_otro[]" value="{{ $producto->cod_presentacion}}">
                             </div>
                             <div class='col'>
                                 {{$producto->nombre}}

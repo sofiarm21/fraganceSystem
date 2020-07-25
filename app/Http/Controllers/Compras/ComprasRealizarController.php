@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Compras;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Session;
 
 use App\Productor;
 use App\Proveedor;
@@ -17,11 +18,13 @@ class ComprasRealizarController extends Controller
     function getContrato($id_productor, $id_proveedor){
         $contrato = DB::table('sms_contrato')
         ->select('sms_contrato.codigo')
-        ->from('contrato')
         ->where('sms_contrato.id_proveedor','=',$id_proveedor)
-        ->where('sms_contrato.id_productor','=',$id_productor);
-
-        return $contrato;
+        ->where('sms_contrato.id_productor','=',$id_productor)
+        ->where('sms_contrato.motivo_no_renovacion','=',null)
+        ->where('sms_contrato.fecha_cancelacion','=',null)
+        ->distinct()
+        ->get();
+        return $contrato[0];
     }
 
     function getProductosContratados($id_productor, $id_proveedor){
@@ -103,6 +106,7 @@ class ComprasRealizarController extends Controller
         return ($condiciones_pago);
     }
 
+
     function getCondicionesEnvio($id_productor, $id_proveedor){
         $condicionesEnvio = DB::table('sms_contrato')
         ->join('sms_c_e','sms_contrato.codigo','=','sms_c_e.cod_contrato')
@@ -125,15 +129,51 @@ class ComprasRealizarController extends Controller
     }
 
 
+    function getIngredientePedido($id_presentacion){
+        $ingrediente_pedio = DB::table('sms_presentacion_mp')
+        ->join('sms_materia_prima_esencias','sms_presentacion_mp.cod_materia_prima','=','sms_materia_prima_esencias.codigo')
+        ->where('sms_presentacion_mp.id','=',$id_presentacion)
+        ->select(
+            'precio',
+            'nombre'
+            )
+        ->distinct()
+        ->get();
+        return($ingrediente_pedio[0]);
+    }
+
+    function getCondicionEnvioPedido($cod_pais, $id_proveedor, $tipo_envio){
+        $condicion_envio =  DB::table('sms_envio')
+        ->join('sms_paises','sms_envio.cod_pais','=','sms_paises.codigo')
+        ->where('sms_envio.id_proveedor','=',$id_proveedor)
+        ->where('sms_envio.cod_pais','=',$cod_pais)
+        ->where('sms_envio.tipo_transporte','=',$tipo_envio)
+        ->select(
+            'sms_envio.id_proveedor',
+            'sms_envio.cod_pais',
+            'sms_envio.id_proveedor',
+            'sms_envio.costo',
+            'sms_envio.tipo_transporte',
+            'sms_paises.nombre'
+            )
+        ->distinct()
+        ->get();
+        return($condicion_envio[0]);
+    }
+
+
+
+
     public function createProductos($id_productor, $id_proveedor, Request $request){
 
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
+        $contrato = self::getContrato($id_productor, $id_proveedor);
 
         $pedido = new Pedido();
         $pedido->id_proveedor = $id_proveedor;
         $pedido->id_productor = $id_productor;
-        $pedido->cod_contrato_c_p = self::getContrato($id_productor, $id_proveedor);
+        $pedido->cod_contrato_c_p = $contrato->codigo;
         $pedido->id_proveedor_c_p = $id_proveedor;
         $pedido->id_productor_c_p = $id_productor;
         $pedido->id_proveedor_c_e_ontrato = $id_proveedor;
@@ -141,7 +181,6 @@ class ComprasRealizarController extends Controller
         $pedido->fecha_creacion = date('Y-m-d');
 
         $detalles_pedido = [];
-
         $productos_contratados = self::getProductosContratados($id_productor, $id_proveedor);
 
         for ($i = 0; $i < count($request->producto); $i++){
@@ -173,7 +212,12 @@ class ComprasRealizarController extends Controller
         //
         // }
 
-        return self::viewEnvio($productor, $proveedor, $pedido, $det_pedido);
+
+        $request->session()->put('detalles_pedido', $detalles_pedido);
+        $request->session()->put('pedido', $pedido);
+
+
+        return self::viewEnvio($productor, $proveedor, $request);
 
     }
 
@@ -199,16 +243,93 @@ class ComprasRealizarController extends Controller
 
     }
 
-    public function viewEnvio($productor, $proveedor, $pedido, $det_pedido){
+    public function createEnvio($id_productor, $id_proveedor, $cod_pais_envio, $tipo_envio, Request $request){
+
+        $productor = Productor::findOrFail($id_productor);
+        $proveedor = Proveedor::findOrFail($id_proveedor);
+
+        $request->session()->put('cod_pais_envio', $cod_pais_envio);
+        $request->session()->put('tipo_envio', $tipo_envio);
+        //var_dump($pedido);
+
+
+        // foreach($detalles_pedido as $pedido){
+        //     var_dump($cantidad);
+        //     var_dump($id_presentacion_mp);
+        //
+        // }
+
+        return self::viewResumen($productor, $proveedor, $request);
+
+    }
+
+    public function viewEnvio($productor, $proveedor, Request $request){
 
         $condiciones_envio = self::getCondicionesEnvio($productor->id, $proveedor->id);
+
+        $detalles_pedido = $request->session()->get('detalles_pedido');
+        $pedido = $request->session()->get('pedido');
+
+
+        foreach ($detalles_pedido as $detalle){
+            //var_dump($detalle->cantidad);
+        }
+
+        foreach ($detalles_pedido as $detalle){
+            //var_dump($detalle->cantidad);
+        }
 
         return view('compras/comprasRealizarEnvio', [
             'proveedor' => $proveedor,
             'productor' => $productor,
+            'pedido' => $pedido,
             'condiciones_envio' => $condiciones_envio
         ]);
 
     }
+
+
+    public function viewResumen($productor, $proveedor, $request){
+
+
+        $detalles_pedido = $request->session()->get('detalles_pedido');
+        $pedido = $request->session()->get('pedido');
+        $cod_pais_envio = $request->session()->get('cod_pais_envio');
+        $tipo_envio = $request->session()->get('tipo_envio');
+
+
+
+
+
+        //var_dump($detalles_pedido);
+        $monto_total = 0;
+        $montos = [];
+        $ingredientes_pedidos = [];
+        $envio = self::getCondicionEnvioPedido($cod_pais_envio,$proveedor->id,$tipo_envio);
+
+
+        foreach($detalles_pedido as $detalle){
+            array_push($ingredientes_pedidos, self::getIngredientePedido($detalle->id_presentacion_mp));
+            array_push($montos, self::getIngredientePedido($detalle->id_presentacion_mp)->precio * $detalle->cantidad);
+            $monto_total += self::getIngredientePedido($detalle->id_presentacion_mp)->precio * $detalle->cantidad;
+        }
+
+
+
+
+        var_dump($ingredientes_pedidos);
+
+
+        return view('compras/comprasResumen', [
+            'proveedor' => $proveedor,
+            'productor' => $productor,
+            'det_pedido' => $detalles_pedido,
+            'montos' => $montos,
+            'monto_total' => $monto_total,
+            'ingredientes_pedidos' => $ingredientes_pedidos,
+            'envio'=>$envio
+        ]);
+    }
+
 
 }

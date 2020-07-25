@@ -12,6 +12,7 @@
         </div>
         <div class='col-12 text-secondary mt-5'>
             @foreach($condiciones_envio as $cond_envio)
+            <a href='/Compras/realizar-compra/create-envio/{{$productor->id}}/{{$proveedor->id}}/{{$cond_envio->cod_pais}}/{{$cond_envio->envio_transporte}}' class='text-light'>
                 <div class='row'>
                     <div class='col'>
                         {{$cond_envio->envio_transporte}}
@@ -26,6 +27,7 @@
                         <hr/>
                     </div>
                 </div>
+            </a>
             @endforeach
         </div>
 
