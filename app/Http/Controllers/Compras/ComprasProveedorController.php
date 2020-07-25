@@ -87,8 +87,9 @@ class ComprasProveedorController extends Controller
         ->join('sms_c_e','sms_contrato.codigo','=','sms_c_e.cod_contrato')
         ->where('sms_contrato.id_proveedor','=',$id_proveedor)
         ->where('sms_contrato.id_productor','=',$id_productor)
-        ->join('sms_envio','sms_contrato.id_proveedor','=','sms_envio.id_proveedor')
+        ->join('sms_envio','sms_c_e.cod_pais_envio','=','sms_envio.cod_pais')
         ->join('sms_paises','sms_envio.cod_pais','=','sms_paises.codigo')
+        ->where('sms_envio.id_proveedor','=',$id_proveedor)
         ->where('sms_envio.id_proveedor','=',$id_proveedor)
         ->select(
             'sms_envio.tipo_transporte AS envio_transporte',
@@ -98,7 +99,7 @@ class ComprasProveedorController extends Controller
         )
         ->distinct()
         ->get();
-
+        
         return ($condicionesEnvio);
     }
 

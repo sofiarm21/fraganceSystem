@@ -17,7 +17,7 @@ class ComprasRealizarController extends Controller
     function getContrato($id_productor, $id_proveedor){
         $contrato = DB::table('sms_contrato')
         ->select('sms_contrato.codigo')
-        ->form('contrato')
+        ->from('contrato')
         ->where('sms_contrato.id_proveedor','=',$id_proveedor)
         ->where('sms_contrato.id_productor','=',$id_productor);
 
@@ -46,6 +46,7 @@ class ComprasRealizarController extends Controller
             'sms_presentacion_mp.volml',
             'sms_presentacion_mp.precio',
             'sms_presentacion_mp.otro',
+            'sms_presentacion_mp.id AS cod_presentacion',
         )
         ->distinct()
         ->get();
@@ -107,8 +108,9 @@ class ComprasRealizarController extends Controller
         ->join('sms_c_e','sms_contrato.codigo','=','sms_c_e.cod_contrato')
         ->where('sms_contrato.id_proveedor','=',$id_proveedor)
         ->where('sms_contrato.id_productor','=',$id_productor)
-        ->join('sms_envio','sms_contrato.id_proveedor','=','sms_envio.id_proveedor')
+        ->join('sms_envio','sms_c_e.cod_pais_envio','=','sms_envio.cod_pais')
         ->join('sms_paises','sms_envio.cod_pais','=','sms_paises.codigo')
+        ->where('sms_envio.id_proveedor','=',$id_proveedor)
         ->where('sms_envio.id_proveedor','=',$id_proveedor)
         ->select(
             'sms_envio.tipo_transporte AS envio_transporte',
@@ -123,7 +125,7 @@ class ComprasRealizarController extends Controller
     }
 
 
-    public function crate($id_productor, $id_proveedor, Request $request){
+    public function createProductos($id_productor, $id_proveedor, Request $request){
 
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
@@ -136,16 +138,42 @@ class ComprasRealizarController extends Controller
         $pedido->id_productor_c_p = $id_productor;
         $pedido->id_proveedor_c_e_ontrato = $id_proveedor;
         $pedido->id_proveedor_c_e_envio = $id_proveedor;
-        $pedido->fecha_creacion = date(Y-m-d);
+        $pedido->fecha_creacion = date('Y-m-d');
 
+        $detalles_pedido = [];
 
+        $productos_contratados = self::getProductosContratados($id_productor, $id_proveedor);
 
+        for ($i = 0; $i < count($request->producto); $i++){
+            $det_pedido = new Pedido_Detalle();
+            $det_pedido->cantidad = $request->producto[$i];
+            $det_pedido->id_presentacion_mp = intval($request->producto[$i + 1]);
+            array_push($detalles_pedido, $det_pedido);
+            $i = $i + 1;
+        }
 
-        foreach($request->producto_codigo as $producto_codigo){
+        if($request->producto_otro != null){
+            for ($i = 0; $i < count($request->producto_otro); $i++){
+
 
                 $det_pedido = new Pedido_Detalle();
-                $det_pedido->id_presentacion_mp = $producto_codigo;
+                $det_pedido->cantidad = $request->producto_otro[$i];
+                $det_pedido->id_presentacion_mp = intval($request->producto_otro[$i + 1]);
+                array_push($detalles_pedido, $det_pedido);
+                $i = $i + 1;
+            }
         }
+
+
+        //var_dump(count($detalles_pedido));
+
+        // foreach($detalles_pedido as $pedido){
+        //     var_dump($pedido->cantidad);
+        //     var_dump($pedido->id_presentacion_mp);
+        //
+        // }
+
+        return self::viewEnvio($productor, $proveedor, $pedido, $det_pedido);
 
     }
 
@@ -166,6 +194,18 @@ class ComprasRealizarController extends Controller
             'productos' => $productos_contratados,
             'ingredientes_otros' => $otros_productos_contratados,
             'condiciones_pago' => $condiciones_pago,
+            'condiciones_envio' => $condiciones_envio
+        ]);
+
+    }
+
+    public function viewEnvio($productor, $proveedor, $pedido, $det_pedido){
+
+        $condiciones_envio = self::getCondicionesEnvio($productor->id, $proveedor->id);
+
+        return view('compras/comprasRealizarEnvio', [
+            'proveedor' => $proveedor,
+            'productor' => $productor,
             'condiciones_envio' => $condiciones_envio
         ]);
 

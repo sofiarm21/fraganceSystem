@@ -34,13 +34,14 @@
             <hr/>
         </div>
         <div class='col-12'>
-        <form action='' method='POST' class='row'>
+    <form  action='/Compras/realizar-compra/create-productos/{{$productor->id}}/{{$proveedor->id}}' method='POST' class='row'>
             @foreach ($productos as $producto)
 
                     <div class='col-12'>
                         <div class='row text-secondary'>
                             <div class='col'>
-                                 <input type="number" class="form-control" id="producto"/>
+                                 <input type="number" name='producto[]' class="form-control" id="producto"/>
+                                 <input type="hidden" name="producto[]" value="{{ $producto->cod_presentacion}}">
                             </div>
                             <div class='col'>
                                 {{$producto->nombre}}
@@ -93,7 +94,8 @@
                     <div class='col-12'>
                         <div class='row text-secondary'>
                             <div class='col'>
-                                 <input type="number" class="form-control" id="producto"/>
+                                 <input type="number" name='producto_otro[]' class="form-control" id="producto"/>
+                                  <input type="hidden" name="producto_otro[]" value="{{ $producto->cod_presentacion}}">
                             </div>
                             <div class='col'>
                                 {{$producto->nombre}}

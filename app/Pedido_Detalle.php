@@ -8,5 +8,5 @@ class Pedido_Detalle extends Model
 {
     protected $table = 'sms_det_pedido';
     public $timestamps = false;
-    protected $primaryKey = ['cod_pedido','id'];
+    protected $primaryKey = 'cod_pedido';
 }
