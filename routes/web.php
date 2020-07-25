@@ -33,6 +33,9 @@ Route::post('/Evaluacion/generacion-contrato/create/{id_productor}/{id_proveedor
 Route::get('/Compras', 'Compras\ComprasController@view');
 Route::get('/Compras/menu/{id}', 'Compras\ComprasMenuController@view');
 Route::get('/Compras/proveedor/{id_productor}/{id_proveedor}', 'Compras\ComprasProveedorController@view');
+Route::get('/Compras/realizar-compra/{id_productor}/{id_proveedor}', 'Compras\ComprasRealizarController@view');
+
+Route::post('/Compras/realizar-compra/create-productos/{id_productor}/{id_proveedor}', 'Compras\ComprasRealizarController@create');
 
 Route::get('/Recomendador', 'RecomendadorController@index');
 

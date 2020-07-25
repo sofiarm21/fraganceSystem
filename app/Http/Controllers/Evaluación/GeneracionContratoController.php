@@ -204,7 +204,6 @@ class GeneracionContratoController extends Controller
                         'cod_mp_esencia' => $producto_codigo
                     ]
                 );
-
         }
         if ($request->ingrediente_codigo != null){
         foreach($request->ingrediente_codigo as $ingrediente_codigo){

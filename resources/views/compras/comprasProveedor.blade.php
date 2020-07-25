@@ -5,7 +5,7 @@
 
 @section('content')
 
-    <div class='ComprasMenu row '>
+    <div class='ComprasProveedor row '>
         <div class='col-12 my-5'>
             <h5>
                 Mi proveedor
@@ -263,7 +263,7 @@
             @endforeach
         </div>
         <div class='col-12 px-5 my-5'>
-            <a href='/Compras/menu/{{$productor->id}}' class='text-light'>
+            <a href='/Compras/realizar-compra/{{$productor->id}}/{{$proveedor->id}}' class='text-light'>
                 <button type="button" class="btn btn-info  w-100">
                     Realizar pedido
                 </button>
