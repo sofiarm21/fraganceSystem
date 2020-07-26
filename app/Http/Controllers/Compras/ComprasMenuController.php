@@ -31,15 +31,36 @@ class ComprasMenuController extends Controller
         return $contratos;
     }
 
+    function getPedidos($id_productor){
+        $pedidos = DB::table('sms_pedido')
+        ->join('sms_proveedores','sms_pedido.id_proveedor','=','sms_proveedores.id')
+        ->where('id_productor','=',$id_productor)
+        ->select(
+            'sms_pedido.codigo',
+            'sms_pedido.total',
+            'sms_pedido.estado',
+            'sms_pedido.total',
+            'sms_pedido.fecha_recibido',
+            'sms_pedido.fecha_creacion',
+            'sms_proveedores.nombre'
+
+            )
+        ->get();
+
+        return $pedidos;
+    }
+
 
     public function view($id){
-        echo "$id";
+
         $productor = Productor::findOrFail($id);
         $proveedores = self::getContratosActivos($id);
+        $pedidos = self::getPedidos($id);
 
         return view('compras/comprasMenu', [
             'proveedores' => $proveedores,
-            'productor' => $productor
+            'productor' => $productor,
+            'pedidos' => $pedidos
         ]);
 
     }
