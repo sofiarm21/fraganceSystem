@@ -36,6 +36,10 @@ Route::get('/Compras/proveedor/{id_productor}/{id_proveedor}', 'Compras\ComprasP
 Route::get('/Compras/realizar-compra/{id_productor}/{id_proveedor}', 'Compras\ComprasRealizarController@view');
 Route::get('/Compras/realizar-compra/envio/{id_productor}/{id_proveedor}/{pedido}/{det_pedido}', 'Compras\ComprasRealizarController@viewEnvio');
 Route::get('/Compras/realizar-compra/create-envio/{id_productor}/{id_proveedor}/{codigo_cond_envio}/{tipo_transporte}', 'Compras\ComprasRealizarController@createEnvio');
+Route::get('/Compras/realizar-compra/metodo-pago/{id_productor}/{id_proveedor}', 'Compras\ComprasRealizarController@metodoPagoView');
+Route::get('/Compras/realizar-compra/metodo-pago/{id_productor}/{id_proveedor}/{cod_cond_pago}', 'Compras\ComprasRealizarController@metodoPagoCreate');
+Route::get('/Compras/realizar-compra/confirmar/{id_productor}/{id_proveedor}', 'Compras\ComprasRealizarController@pedidoCreate');
+
 
 
 Route::post('/Compras/realizar-compra/create-productos/{id_productor}/{id_proveedor}', 'Compras\ComprasRealizarController@createProductos');

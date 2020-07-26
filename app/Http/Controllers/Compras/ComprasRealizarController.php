@@ -11,6 +11,8 @@ use App\Productor;
 use App\Proveedor;
 use App\Pedido;
 use App\Pedido_Detalle;
+use App\CondicionPago;
+
 
 class ComprasRealizarController extends Controller
 {
@@ -170,13 +172,17 @@ class ComprasRealizarController extends Controller
         $proveedor = Proveedor::findOrFail($id_proveedor);
         $contrato = self::getContrato($id_productor, $id_proveedor);
 
+        var_dump($id_productor);
+
         $pedido = new Pedido();
         $pedido->id_proveedor = $id_proveedor;
         $pedido->id_productor = $id_productor;
         $pedido->cod_contrato_c_p = $contrato->codigo;
         $pedido->id_proveedor_c_p = $id_proveedor;
         $pedido->id_productor_c_p = $id_productor;
-        $pedido->id_proveedor_c_e_ontrato = $id_proveedor;
+        $pedido->cod_contrato_c_e = $contrato->codigo;
+        $pedido->id_proveedor_c_e_contrato = $id_proveedor;
+        $pedido->id_productor_c_e_contrato = $id_productor;
         $pedido->id_proveedor_c_e_envio = $id_proveedor;
         $pedido->fecha_creacion = date('Y-m-d');
 
@@ -250,6 +256,9 @@ class ComprasRealizarController extends Controller
 
         $request->session()->put('cod_pais_envio', $cod_pais_envio);
         $request->session()->put('tipo_envio', $tipo_envio);
+        $pedido = $request->session()->get('pedido');
+
+        $pedido->cod_pais_c_e = $cod_pais_envio;
         //var_dump($pedido);
 
 
@@ -269,6 +278,7 @@ class ComprasRealizarController extends Controller
 
         $detalles_pedido = $request->session()->get('detalles_pedido');
         $pedido = $request->session()->get('pedido');
+
 
 
         foreach ($detalles_pedido as $detalle){
@@ -297,10 +307,6 @@ class ComprasRealizarController extends Controller
         $cod_pais_envio = $request->session()->get('cod_pais_envio');
         $tipo_envio = $request->session()->get('tipo_envio');
 
-
-
-
-
         //var_dump($detalles_pedido);
         $monto_total = 0;
         $montos = [];
@@ -315,9 +321,13 @@ class ComprasRealizarController extends Controller
         }
 
 
+        $pedido->total = $monto_total + $envio->costo;
 
+        var_dump($pedido);
 
-        var_dump($ingredientes_pedidos);
+        $request->session()->put('envio',$envio);
+        $request->session()->put('ingredientes_pedidos', $ingredientes_pedidos);
+        $request->session()->put('monto_total',$monto_total);
 
 
         return view('compras/comprasResumen', [
@@ -330,6 +340,105 @@ class ComprasRealizarController extends Controller
             'envio'=>$envio
         ]);
     }
+
+    public function metodoPagoCreate($id_productor, $id_proveedor, $cod_cond_pago, Request $request){
+
+        $productor = Productor::findOrFail($id_productor);
+        $proveedor = Proveedor::findOrFail($id_proveedor);
+        $condicion_pago = CondicionPago::findOrFail($cod_cond_pago);
+
+        $detalles_pedido = $request->session()->get('detalles_pedido');
+        $pedido = $request->session()->get('pedido');
+        $cod_pais_envio = $request->session()->get('cod_pais_envio');
+        $tipo_envio = $request->session()->get('tipo_envio');
+        $ingredientes_pedidos = $request->session()->get('ingredientes_pedidos');
+        $envio = $request->session()->get('envio');
+        $monto_total = $request->session()->get('monto_total');
+
+        $pedido->cod_cond_pago_c_p = $cod_cond_pago;
+
+        return view('compras/comprasConfirmar', [
+            'proveedor' => $proveedor,
+            'productor' => $productor,
+            'pedido' => $pedido,
+            'det_pedido' => $detalles_pedido,
+            'ingredientes_pedidos' => $ingredientes_pedidos,
+            'envio'=>$envio,
+            'condicion_pago' => $condicion_pago,
+            'monto_total' => $monto_total
+        ]);
+
+    }
+
+    public function metodoPagoView($id_productor, $id_proveedor, Request $request){
+
+        $productor = Productor::findOrFail($id_productor);
+        $proveedor = Proveedor::findOrFail($id_proveedor);
+
+        $metodos_pago = self::getCondicionesPago($id_productor, $id_proveedor);
+
+        $pedido = $request->session()->get('pedido');
+
+
+        var_dump($pedido);
+
+        return view('compras/comprasPago', [
+            'proveedor' => $proveedor,
+            'productor' => $productor,
+            'metodos_pago' => $metodos_pago,
+        ]);
+
+    }
+
+    public function pedidoCreate($id_productor, $id_proveedor, Request $request){
+        $productor = Productor::findOrFail($id_productor);
+        $proveedor = Proveedor::findOrFail($id_proveedor);
+        $pedido = $request->session()->get('pedido');
+        $pedido->estado = 0;
+
+        echo "$id_productor";
+
+        // echo "id_proveedor ";
+        // var_dump($pedido->id_proveedor);
+        // echo "id_productor ";
+        // var_dump($pedido->id_productor);
+        // echo "cod_contrato_c_p ";
+        // var_dump($pedido->cod_contrato_c_p);
+        // echo "id_proveedor_c_p ";
+        // var_dump($pedido->id_proveedor_c_p);
+        // echo "id_productor_c_p ";
+        // var_dump($pedido->id_productor_c_p);
+        // echo "cod_cond_pago_c_p ";
+        // var_dump($pedido->cod_cond_pago_c_p);
+        // echo "cod_contrato_c_e ";
+        // var_dump($pedido->cod_contrato_c_e);
+        // echo "id_proveedor_c_e_contrato ";
+        // var_dump($pedido->id_proveedor_c_e_contrato);
+        // echo "id_productor_c_e_contrato ";
+        // var_dump($pedido->id_productor_c_e_contrato);
+        // echo "cod_pais_c_e ";
+        // var_dump($pedido->cod_pais_c_e);
+        // echo "id_proveedor_c_e_envio ";
+        // var_dump($pedido->id_proveedor_c_e_envio);
+        // echo "fecha_creacion ";
+        // var_dump($pedido->fecha_creacion);
+        // echo "total ";
+        // var_dump($pedido->total);
+
+        $pedido->save();
+
+        return redirect()->action(
+            'Compras\ComprasController@view',
+            ['id'=>$id_productor]
+        );
+
+
+
+
+
+    }
+
+
 
 
 }

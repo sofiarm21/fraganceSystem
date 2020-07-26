@@ -33,10 +33,10 @@ class ComprasMenuController extends Controller
 
 
     public function view($id){
-
+        echo "$id";
         $productor = Productor::findOrFail($id);
         $proveedores = self::getContratosActivos($id);
-        
+
         return view('compras/comprasMenu', [
             'proveedores' => $proveedores,
             'productor' => $productor

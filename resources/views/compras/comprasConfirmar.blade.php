@@ -5,17 +5,23 @@
 
 @section('content')
 
-    <div class='ComprasResumen row'>
-        <div class='col-12'>
+    <div class='ComprasConfirmar row justify-content-center'>
+        <div class='col-12 my-5'>
+            <h5 class='font-weight-bold'>
+                Confirmación de pedido
+            </h5>
             <h5>
-                Detalle de pedido
+                Productor:
+                {{$productor->nombre}}
+                <br/>
+                Proveedor:
+                {{$proveedor->nombre}}
             </h5>
         </div>
-        <div class='col-auto font-weight-bold mt-5'>
+        <div class='col-12 font-weight-bold'>
             Ingredientes
         </div>
         <div class='col-12 mt-2'>
-
             <div class='row my-4 text-secondary font-weight-bold'>
                 <div class='col'>
                     Nombre
@@ -82,19 +88,53 @@
                 </div>
             </div>
         </div>
-        <div class='col-12 font-weight-bold mt-5 text-warning'>
-            Total de pedido
-            <br/>
-            $ {{$monto_total + $envio->costo}}
+        <div class='col-12 mt-5 font-weight-bold mb-4'>
+            Método de pago
+        </div>
+        <div class='col-12'>
+            <div class='row text-secondary font-weight-bold mb-4'>
+                <div class='col'>
+                    Tipo de pago
+                </div>
+                <div class='col'>
+                    Número de cuotas
+                </div>
+                <div class='col'>
+                    Porcentaje
+                </div>
+            </div>
+            <div class='row text-secondary'>
+                <div class='col'>
+                    {{$condicion_pago->tipo}}
+                </div>
+                <div class='col'>
+                    @if($condicion_pago->cantidad_cuotas == null)
+                        1
+                    @endif
+                    {{$condicion_pago->cuotas}}
+                </div>
+                <div class='col'>
+                    @if($condicion_pago->porcentaje == null)
+                        100%
+                    @endif
+                    {{$condicion_pago->porcentaje}}
+                </div>
+            </div>
+        </div>
+        <div class='col-12 mt-5'>
+            <h5>
+                Pago Total
+                    </br>
+                $ {{$pedido->total}}
+            </h5>
         </div>
         <div class='col my-5'>
-            <a href='/Compras/realizar-compra/metodo-pago/{{$productor->id}}/{{$proveedor->id}}'>
+            <a href='/Compras/realizar-compra/confirmar/{{$productor->id}}/{{$proveedor->id}}'>
                 <button type='submit' class="btn btn-info">
-                    Continuar
+                    Confirmar
                 </button>
             </a>
         </div>
-
 
     </div>
 
