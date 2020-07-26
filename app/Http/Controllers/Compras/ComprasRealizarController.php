@@ -61,11 +61,13 @@ class ComprasRealizarController extends Controller
 
 
     function getOtrosProductosContratados($id_productor, $id_proveedor){
+        $contrato = self::getContrato($id_productor, $id_proveedor);
         $otros_productos_contratados =DB::table('sms_contrato')
         ->join('sms_det_contrato','sms_contrato.codigo','=','sms_det_contrato.cod_contrato')
         ->where('sms_contrato.id_proveedor','=',$id_proveedor)
         ->where('sms_contrato.id_productor','=',$id_productor)
         ->join('sms_componente_ing_otros','sms_det_contrato.cod_componente_ing','=','sms_componente_ing_otros.codigo')
+        ->where('sms_det_contrato.cod_contrato','=',$contrato->codigo)
         ->join('sms_presentacion_mp','sms_componente_ing_otros.codigo','=','sms_presentacion_mp.cod_componente_ing')
         ->select(
             'sms_componente_ing_otros.nombre',
@@ -74,6 +76,7 @@ class ComprasRealizarController extends Controller
             'sms_presentacion_mp.volml',
             'sms_presentacion_mp.precio',
             'sms_presentacion_mp.otro',
+            'sms_presentacion_mp.id AS cod_presentacion',
         )
         ->distinct()
         ->get();
@@ -132,7 +135,8 @@ class ComprasRealizarController extends Controller
 
 
     function getIngredientePedido($id_presentacion){
-        $ingrediente_pedio = DB::table('sms_presentacion_mp')
+
+        $ingrediente_pedido = DB::table('sms_presentacion_mp')
         ->join('sms_materia_prima_esencias','sms_presentacion_mp.cod_materia_prima','=','sms_materia_prima_esencias.codigo')
         ->where('sms_presentacion_mp.id','=',$id_presentacion)
         ->select(
@@ -141,7 +145,25 @@ class ComprasRealizarController extends Controller
             )
         ->distinct()
         ->get();
-        return($ingrediente_pedio[0]);
+
+        if (count($ingrediente_pedido) == 0){
+
+            $ingrediente_pedido = DB::table('sms_presentacion_mp')
+            ->join('sms_componente_ing_otros','sms_presentacion_mp.cod_componente_ing','=','sms_componente_ing_otros.codigo')
+            ->where('sms_presentacion_mp.id','=',$id_presentacion)
+            ->select(
+                'precio',
+                'nombre'
+                )
+            ->distinct()
+            ->get();
+        }
+
+
+        return($ingrediente_pedido[0]);
+
+
+
     }
 
     function getCondicionEnvioPedido($cod_pais, $id_proveedor, $tipo_envio){
@@ -172,7 +194,6 @@ class ComprasRealizarController extends Controller
         $proveedor = Proveedor::findOrFail($id_proveedor);
         $contrato = self::getContrato($id_productor, $id_proveedor);
 
-        var_dump($id_productor);
 
         $pedido = new Pedido();
         $pedido->id_proveedor = $id_proveedor;
@@ -190,21 +211,25 @@ class ComprasRealizarController extends Controller
         $productos_contratados = self::getProductosContratados($id_productor, $id_proveedor);
 
         for ($i = 0; $i < count($request->producto); $i++){
-            $det_pedido = new Pedido_Detalle();
-            $det_pedido->cantidad = $request->producto[$i];
-            $det_pedido->id_presentacion_mp = intval($request->producto[$i + 1]);
-            array_push($detalles_pedido, $det_pedido);
+            var_dump($request->producto[$i]);
+            if ($request->producto[$i] != null){
+                $det_pedido = new Pedido_Detalle();
+                $det_pedido->cantidad = $request->producto[$i];
+                $det_pedido->id_presentacion_mp = intval($request->producto[$i + 1]);
+                array_push($detalles_pedido, $det_pedido);
+
+            }
             $i = $i + 1;
         }
 
         if($request->producto_otro != null){
             for ($i = 0; $i < count($request->producto_otro); $i++){
-
-
-                $det_pedido = new Pedido_Detalle();
-                $det_pedido->cantidad = $request->producto_otro[$i];
-                $det_pedido->id_presentacion_mp = intval($request->producto_otro[$i + 1]);
-                array_push($detalles_pedido, $det_pedido);
+                if ($request->producto_otro[$i] != null){
+                    $det_pedido = new Pedido_Detalle();
+                    $det_pedido->cantidad = $request->producto_otro[$i];
+                    $det_pedido->id_presentacion_mp = intval($request->producto_otro[$i + 1]);
+                    array_push($detalles_pedido, $det_pedido);
+                }
                 $i = $i + 1;
             }
         }
@@ -323,7 +348,6 @@ class ComprasRealizarController extends Controller
 
         $pedido->total = $monto_total + $envio->costo;
 
-        var_dump($pedido);
 
         $request->session()->put('envio',$envio);
         $request->session()->put('ingredientes_pedidos', $ingredientes_pedidos);
@@ -380,7 +404,7 @@ class ComprasRealizarController extends Controller
         $pedido = $request->session()->get('pedido');
 
 
-        var_dump($pedido);
+
 
         return view('compras/comprasPago', [
             'proveedor' => $proveedor,
@@ -394,9 +418,11 @@ class ComprasRealizarController extends Controller
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
         $pedido = $request->session()->get('pedido');
+        $detalles_pedido = $request->session()->get('detalles_pedido');
+
+
         $pedido->estado = 0;
 
-        echo "$id_productor";
 
         // echo "id_proveedor ";
         // var_dump($pedido->id_proveedor);
@@ -426,6 +452,11 @@ class ComprasRealizarController extends Controller
         // var_dump($pedido->total);
 
         $pedido->save();
+
+        foreach ($detalles_pedido as $detalle){
+            $detalle->cod_pedido = $pedido->codigo;
+            $detalle->save();
+        }
 
         return redirect()->action(
             'Compras\ComprasController@view',

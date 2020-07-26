@@ -107,7 +107,7 @@
                                 {{$producto->otro}}
                             </div>
                             <div class='col'>
-                                {{$producto->num_ipc}}
+                                {{$producto->ipc}}
                             </div>
                         </div>
                     </div>
