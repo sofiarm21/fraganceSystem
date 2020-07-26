@@ -210,8 +210,40 @@ class ComprasRealizarController extends Controller
         $detalles_pedido = [];
         $productos_contratados = self::getProductosContratados($id_productor, $id_proveedor);
 
+
+        //verificar que las cantidades no sean 0
         for ($i = 0; $i < count($request->producto); $i++){
-            var_dump($request->producto[$i]);
+            if ($request->producto[$i] < 0) {
+                return redirect()->action(
+                    'Compras\ComprasRealizarController@view',
+                    [
+                        'id_productor'=>$id_productor,
+                        'id_proveedor'=>$id_proveedor
+
+                    ]
+                );
+            }
+            $i = $i + 1;
+        }
+
+        if($request->producto_otro != null){
+            for ($i = 0; $i < count($request->producto_otro); $i++){
+                if ($request->producto_otro[$i] < 0) {
+                    return redirect()->action(
+                        'Compras\ComprasRealizarController@view',
+                        [
+                            'id_productor'=>$id_productor,
+                            'id_proveedor'=>$id_proveedor
+
+                        ]
+                    );
+                }
+                $i = $i + 1;
+            }
+        }
+
+
+        for ($i = 0; $i < count($request->producto); $i++){
             if ($request->producto[$i] != null){
                 $det_pedido = new Pedido_Detalle();
                 $det_pedido->cantidad = $request->producto[$i];
@@ -233,16 +265,6 @@ class ComprasRealizarController extends Controller
                 $i = $i + 1;
             }
         }
-
-
-        //var_dump(count($detalles_pedido));
-
-        // foreach($detalles_pedido as $pedido){
-        //     var_dump($pedido->cantidad);
-        //     var_dump($pedido->id_presentacion_mp);
-        //
-        // }
-
 
         $request->session()->put('detalles_pedido', $detalles_pedido);
         $request->session()->put('pedido', $pedido);
@@ -284,14 +306,6 @@ class ComprasRealizarController extends Controller
         $pedido = $request->session()->get('pedido');
 
         $pedido->cod_pais_c_e = $cod_pais_envio;
-        //var_dump($pedido);
-
-
-        // foreach($detalles_pedido as $pedido){
-        //     var_dump($cantidad);
-        //     var_dump($id_presentacion_mp);
-        //
-        // }
 
         return self::viewResumen($productor, $proveedor, $request);
 
@@ -303,16 +317,6 @@ class ComprasRealizarController extends Controller
 
         $detalles_pedido = $request->session()->get('detalles_pedido');
         $pedido = $request->session()->get('pedido');
-
-
-
-        foreach ($detalles_pedido as $detalle){
-            //var_dump($detalle->cantidad);
-        }
-
-        foreach ($detalles_pedido as $detalle){
-            //var_dump($detalle->cantidad);
-        }
 
         return view('compras/comprasRealizarEnvio', [
             'proveedor' => $proveedor,
@@ -332,7 +336,6 @@ class ComprasRealizarController extends Controller
         $cod_pais_envio = $request->session()->get('cod_pais_envio');
         $tipo_envio = $request->session()->get('tipo_envio');
 
-        //var_dump($detalles_pedido);
         $monto_total = 0;
         $montos = [];
         $ingredientes_pedidos = [];
