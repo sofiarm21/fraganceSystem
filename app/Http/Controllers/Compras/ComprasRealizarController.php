@@ -244,7 +244,7 @@ class ComprasRealizarController extends Controller
 
 
         for ($i = 0; $i < count($request->producto); $i++){
-            if ($request->producto[$i] != null){
+            if ($request->producto[$i] != (null || 0) ){
                 $det_pedido = new Pedido_Detalle();
                 $det_pedido->cantidad = $request->producto[$i];
                 $det_pedido->id_presentacion_mp = intval($request->producto[$i + 1]);
@@ -256,7 +256,7 @@ class ComprasRealizarController extends Controller
 
         if($request->producto_otro != null){
             for ($i = 0; $i < count($request->producto_otro); $i++){
-                if ($request->producto_otro[$i] != null){
+                if ($request->producto_otro[$i] != (null || 0)){
                     $det_pedido = new Pedido_Detalle();
                     $det_pedido->cantidad = $request->producto_otro[$i];
                     $det_pedido->id_presentacion_mp = intval($request->producto_otro[$i + 1]);

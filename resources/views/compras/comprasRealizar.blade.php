@@ -40,7 +40,7 @@
                     <div class='col-12'>
                         <div class='row text-secondary'>
                             <div class='col'>
-                                 <input type="number" name='producto[]' class="form-control" id="producto"/>
+                                 <input type="number" name='producto[]' min="0" onKeyDown="return false" value=0 class="form-control" id="producto"/>
                                  <input type="hidden" name="producto[]" value="{{ $producto->cod_presentacion}}">
                             </div>
                             <div class='col'>
@@ -94,7 +94,7 @@
                     <div class='col-12'>
                         <div class='row text-secondary'>
                             <div class='col'>
-                                 <input type="number" name='producto_otro[]' class="form-control" id="producto"/>
+                                 <input type="number" name='producto_otro[]' min="0" value=0 onKeyDown="return false" class="form-control" id="producto"/>
                                  <input type="hidden" name="producto_otro[]" value="{{ $producto->cod_presentacion}}">
                             </div>
                             <div class='col'>
