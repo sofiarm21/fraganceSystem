@@ -12,6 +12,18 @@ use App\Proveedor;
 class ComprasProveedorController extends Controller
 {
 
+    function getContrato($id_productor, $id_proveedor){
+        $contrato = DB::table('sms_contrato')
+        ->select('sms_contrato.codigo')
+        ->where('sms_contrato.id_proveedor','=',$id_proveedor)
+        ->where('sms_contrato.id_productor','=',$id_productor)
+        ->where('sms_contrato.motivo_no_renovacion','=',null)
+        ->where('sms_contrato.fecha_cancelacion','=',null)
+        ->distinct()
+        ->get();
+        return $contrato[0];
+    }
+
     function getProductosContratados($id_productor, $id_proveedor){
         $productos_contratados= DB::table('sms_contrato')
         ->join('sms_det_contrato','sms_contrato.codigo','=','sms_det_contrato.cod_contrato')
@@ -38,11 +50,13 @@ class ComprasProveedorController extends Controller
     }
 
     function getOtrosProductosContratados($id_productor, $id_proveedor){
+        $contrato = self::getContrato($id_productor, $id_proveedor);
         $otros_productos_contratados= DB::table('sms_contrato')
         ->join('sms_det_contrato','sms_contrato.codigo','=','sms_det_contrato.cod_contrato')
         ->where('sms_contrato.id_proveedor','=',$id_proveedor)
         ->where('sms_contrato.id_productor','=',$id_productor)
         ->join('sms_componente_ing_otros','sms_det_contrato.cod_componente_ing','=','sms_componente_ing_otros.codigo')
+        ->where('sms_det_contrato.cod_contrato','=',$contrato->codigo)
         ->select(
             'sms_componente_ing_otros.nombre',
             'sms_componente_ing_otros.tsca_cas',
@@ -52,6 +66,8 @@ class ComprasProveedorController extends Controller
         ->get();
 
         return ($otros_productos_contratados);
+
+
     }
 
     function getCondicionesPago($id_productor, $id_proveedor){
@@ -87,8 +103,9 @@ class ComprasProveedorController extends Controller
         ->join('sms_c_e','sms_contrato.codigo','=','sms_c_e.cod_contrato')
         ->where('sms_contrato.id_proveedor','=',$id_proveedor)
         ->where('sms_contrato.id_productor','=',$id_productor)
-        ->join('sms_envio','sms_contrato.id_proveedor','=','sms_envio.id_proveedor')
+        ->join('sms_envio','sms_c_e.cod_pais_envio','=','sms_envio.cod_pais')
         ->join('sms_paises','sms_envio.cod_pais','=','sms_paises.codigo')
+        ->where('sms_envio.id_proveedor','=',$id_proveedor)
         ->where('sms_envio.id_proveedor','=',$id_proveedor)
         ->select(
             'sms_envio.tipo_transporte AS envio_transporte',

@@ -347,7 +347,7 @@
                 <h5>
                     Exclusividad
                 </h5>
-                <input class="form-check-input" type="checkbox" name='exclusividad' vallue=true id='exclusividad'/>
+                <input class="form-check-input" type="checkbox" name='exclusividad' value=true id='exclusividad'/>
                 <p class='text-secondary'>
                     Quiero que la relación con este proveedor sea exclusiva
                 </p>
