@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Session;
+use Illuminate\Support\Facades\Log;
 
 use App\Productor;
 use App\Proveedor;
@@ -93,19 +94,18 @@ class ComprasRealizarController extends Controller
         ->where('sms_c_p.id_proveedor_contrato','=',$id_proveedor)
         ->where('sms_c_p.id_productor_contrato','=',$id_productor)
         ->leftJoin('sms_cuotas','sms_condicion_pago.codigo','=','sms_cuotas.cod_cond_pago')
-        ->where('sms_condicion_pago.id_proveedor','=',$id_proveedor)
+        ->where('sms_c_p.id_proveedor_contrato','=',$id_proveedor)
         ->select(
             'sms_condicion_pago.tipo',
             'sms_condicion_pago.cantidad_cuotas',
             'sms_condicion_pago.codigo',
-            'sms_cuotas.porcentaje_pago AS pago_porcentajes',
+            'sms_cuotas.porcentaje_pago',
             'sms_cuotas.tiempo_para_pago AS pago_dias',
             'sms_cuotas.porcentaje_recargo',
             'sms_cuotas.porcentaje_descuento',
             'sms_cuotas.cod_cond_pago',
 
         )
-        ->distinct()
         ->get();
 
         return ($condiciones_pago);
@@ -282,7 +282,6 @@ class ComprasRealizarController extends Controller
 
         $productos_contratados = self::getProductosContratados($id_productor, $id_proveedor);
         $otros_productos_contratados = self::getOtrosProductosContratados($id_productor, $id_proveedor);
-        $condiciones_pago = self::getCondicionesPago($id_productor, $id_proveedor);
         $condiciones_envio = self::getCondicionesEnvio($id_productor, $id_proveedor);
 
         return view('compras/comprasRealizar', [
@@ -290,7 +289,6 @@ class ComprasRealizarController extends Controller
             'productor' => $productor,
             'productos' => $productos_contratados,
             'ingredientes_otros' => $otros_productos_contratados,
-            'condiciones_pago' => $condiciones_pago,
             'condiciones_envio' => $condiciones_envio
         ]);
 
@@ -401,13 +399,8 @@ class ComprasRealizarController extends Controller
 
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
-
         $metodos_pago = self::getCondicionesPago($id_productor, $id_proveedor);
-
         $pedido = $request->session()->get('pedido');
-
-
-
 
         return view('compras/comprasPago', [
             'proveedor' => $proveedor,
@@ -462,7 +455,7 @@ class ComprasRealizarController extends Controller
         }
 
         return redirect()->action(
-            'Compras\ComprasController@view',
+            'Compras\ComprasMenuController@view',
             ['id'=>$id_productor]
         );
 

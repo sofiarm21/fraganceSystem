@@ -33,25 +33,53 @@
 
                     @for($i=0; $i < count($metodos_pago); $i++)
                         <a href='/Compras/realizar-compra/metodo-pago/{{$productor->id}}/{{$proveedor->id}}/{{$metodos_pago[$i]->codigo}}' class='col-12'>
-                            <div class='row'>
-                                <div class='col'>
-                                    {{$metodos_pago[$i]->tipo}}
+                            <div class='row text-secondary'>
+                                <div class='tipoPago col'>
+                                    @if ($metodos_pago[$i]->cantidad_cuotas != null)
+                                        @if ($i == 0)
+                                            {{$metodos_pago[$i]->tipo}}
+                                        @else
+                                            @if ($metodos_pago[$i]->cod_cond_pago != $metodos_pago[$i - 1]->cod_cond_pago)
+                                                {{$metodos_pago[$i]->tipo}}
+                                            @endif
+                                        @endif
+                                    @else
+                                        {{$metodos_pago[$i]->tipo}}
+                                    @endif
                                 </div>
-                                <div class='col'>
-                                    @if ($metodos_pago[$i]->cantidad_cuotas == null)
+                                <div class='cantCuotas col'>
+                                    @if ($metodos_pago[$i]->cantidad_cuotas != null)
+                                        @if ($i == 0)
+                                            {{$metodos_pago[$i]->cantidad_cuotas}}
+                                        @else
+                                            @if ($metodos_pago[$i]->cod_cond_pago != $metodos_pago[$i - 1]->cod_cond_pago)
+                                                {{$metodos_pago[$i]->cantidad_cuotas}}
+                                            @endif
+                                        @endif
+                                    @else
                                         1
                                     @endif
-                                    {{$metodos_pago[$i]->cantidad_cuotas}}
                                 </div>
-                                <div class='col'>
-                                    @if ($metodos_pago[$i]->pago_porcentajes == null)
+                                <div class='porcentajeCuotas col'>
+                                    @if ($metodos_pago[$i]->cantidad_cuotas != null)
+
+                                            <p class='font-weight-bold mb-0'>
+                                                Pago {{$i + 1}}:
+                                            </p>
+                                                {{$metodos_pago[$i]->porcentaje_pago}} %
+                                            <p class='font-weight-bold mb-0'>
+                                                Recargo:
+                                            </p>
+                                            {{$metodos_pago[$i]->porcentaje_recargo}} %
+                                            <p class='font-weight-bold mb-0'>
+                                                Descuento:
+                                            </p>
+                                            {{$metodos_pago[$i]->porcentaje_descuento}} %
+                                    @else
+                                    <p class='font-weight-bold mb-0'>
+                                        Pago:
+                                    </p>
                                         100 %
-                                    @endif
-                                    {{$metodos_pago[$i]->pago_porcentajes}}
-                                    @if ($i+1 <  count($metodos_pago))
-                                        @while($metodos_pago[$i+1]->codigo == $metodos_pago[$i]->codigo)
-                                            {{$metodos_pago[$i]->pago_porcentajes}}
-                                        @endwhile
                                     @endif
                                 </div>
                                 <div class='col-12'>

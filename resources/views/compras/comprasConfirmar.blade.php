@@ -100,7 +100,7 @@
                     Número de cuotas
                 </div>
                 <div class='col'>
-                    Porcentaje
+                    Descripción
                 </div>
             </div>
             <div class='row text-secondary'>
@@ -111,13 +111,10 @@
                     @if($condicion_pago->cantidad_cuotas == null)
                         1
                     @endif
-                    {{$condicion_pago->cuotas}}
+                    {{$condicion_pago->cantidad_cuotas}}
                 </div>
                 <div class='col'>
-                    @if($condicion_pago->porcentaje == null)
-                        100%
-                    @endif
-                    {{$condicion_pago->porcentaje}}
+                    {{$condicion_pago->descripcion}}
                 </div>
             </div>
         </div>
