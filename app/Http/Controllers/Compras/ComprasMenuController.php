@@ -42,8 +42,8 @@ class ComprasMenuController extends Controller
             'sms_pedido.total',
             'sms_pedido.fecha_recibido',
             'sms_pedido.fecha_creacion',
-            'sms_proveedores.nombre'
-
+            'sms_proveedores.nombre',
+            'sms_proveedores.id'
             )
         ->get();
 

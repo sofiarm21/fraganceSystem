@@ -45,7 +45,7 @@
                                 <p class="card-text font-weight-bold">Codigo pedido</p>
                                 <p class="card-text">{{$pedido->codigo}}</p>
                                 <p class="card-text">Fecha de creación <br/> {{$pedido->fecha_creacion}}</p>
-                                <a href='/' class="card-link">
+                                <a href='/Compras/pedido/detalle/{{$productor->id}}/{{$pedido->id}}/{{$pedido->codigo}}' class="card-link">
                                     Detalle
                                 </a>
                             </div>
@@ -66,7 +66,7 @@
                                 <p class="card-text font-weight-bold">Codigo pedido</p>
                                 <p class="card-text">{{$pedido->codigo}}</p>
                                 <p class="card-text">Fecha de creación <br/> {{$pedido->fecha_creacion}}</p>
-                                <a href='/' class="card-link">
+                                <a href='/Compras/pedido/detalle/{{$productor->id}}/{{$pedido->id}}/{{$pedido->codigo}}' class="card-link">
                                     Detalle
                                 </a>
                             </div>
@@ -87,7 +87,7 @@
                                 <p class="card-text font-weight-bold">Codigo pedido</p>
                                 <p class="card-text">{{$pedido->codigo}}</p>
                                 <p class="card-text">Fecha de creación <br/> {{$pedido->fecha_creacion}}</p>
-                                <a href='/' class="card-link">
+                                <a href='/Compras/pedido/detalle/{{$productor->id}}/{{$pedido->id}}/{{$pedido->codigo}}' class="card-link">
                                     Detalle
                                 </a>
                             </div>
