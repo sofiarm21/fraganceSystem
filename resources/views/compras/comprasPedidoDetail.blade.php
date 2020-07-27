@@ -41,6 +41,8 @@
                                 {{$producto[0]->volml}} ml - $ {{$producto[0]->precio}}
                                 <br/>
                                 {{$producto[0]->otro}}
+                                <br/>
+                                Cantidad: {{$producto[0]->cantidad}}
                             </p>
                             <div class='row '>
                                 <div class='col'>
@@ -104,6 +106,8 @@
                             {{$producto[0]->volml}} ml - $ {{$producto[0]->precio}}
                             <br/>
                             {{$producto[0]->otro}}
+                            <br/>
+                            Cantidad: {{$producto[0]->cantidad}}
                         </p>
 
                     </div>

@@ -26,11 +26,15 @@ class PedidoDetailController extends Controller
         return $pedido;
     }
 
-    function getIngredientes($id_presentacion){
-        $ingredientes = DB::table('sms_presentacion_mp')
+    function getIngredientes($id_presentacion, $id_pedido){
+        $ingredientes = DB::table('sms_pedido')
+        ->join('sms_det_pedido','sms_pedido.codigo','=','sms_det_pedido.cod_pedido')
+        ->where('sms_pedido.codigo','=',$id_pedido)
+        ->join('sms_presentacion_mp','sms_det_pedido.id_presentacion_mp', '=', 'sms_presentacion_mp.id')
         ->join('sms_materia_prima_esencias','sms_presentacion_mp.cod_materia_prima','=','sms_materia_prima_esencias.codigo')
         ->where('sms_presentacion_mp.id','=',$id_presentacion)
         ->select(
+            'sms_det_pedido.cantidad',
             'sms_materia_prima_esencias.nombre',
             'sms_materia_prima_esencias.nombre_alternativo',
             'sms_materia_prima_esencias.num_ipc',
@@ -46,11 +50,15 @@ class PedidoDetailController extends Controller
         return $ingredientes;
     }
 
-    function getOtrosIngredientes($id_presentacion){
-        $ingredientes = DB::table('sms_presentacion_mp')
+    function getOtrosIngredientes($id_presentacion ,$id_pedido){
+        $ingredientes = DB::table('sms_pedido')
+        ->join('sms_det_pedido','sms_pedido.codigo','=','sms_det_pedido.cod_pedido')
+        ->where('sms_pedido.codigo','=',$id_pedido)
+        ->join('sms_presentacion_mp','sms_det_pedido.id_presentacion_mp', '=', 'sms_presentacion_mp.id')
         ->join('sms_componente_ing_otros', 'sms_presentacion_mp.cod_componente_ing','=','sms_componente_ing_otros.codigo')
         ->where('sms_presentacion_mp.id','=',$id_presentacion)
         ->select(
+            'sms_det_pedido.cantidad',
             'sms_componente_ing_otros.nombre',
             'sms_presentacion_mp.volml',
             'sms_presentacion_mp.precio',
@@ -58,6 +66,19 @@ class PedidoDetailController extends Controller
             )
         ->get();
         return $ingredientes;
+
+
+        // $ingredientes = DB::table('sms_presentacion_mp')
+        // ->join('sms_componente_ing_otros', 'sms_presentacion_mp.cod_componente_ing','=','sms_componente_ing_otros.codigo')
+        // ->where('sms_presentacion_mp.id','=',$id_presentacion)
+        // ->select(
+        //     'sms_componente_ing_otros.nombre',
+        //     'sms_presentacion_mp.volml',
+        //     'sms_presentacion_mp.precio',
+        //     'sms_presentacion_mp.otro'
+        //     )
+        // ->get();
+        // return $ingredientes;
     }
 
     function getMetodoEnvio($id_pedido){
@@ -108,10 +129,10 @@ class PedidoDetailController extends Controller
         $otros_ingredientes = [];
 
         foreach ($presentaciones as $presentacion){
-            array_push($ingredientes, self::getIngredientes($presentacion->id));
+            array_push($ingredientes, self::getIngredientes($presentacion->id, $id_pedido));
         }
         foreach ($presentaciones as $presentacion){
-            array_push($otros_ingredientes, self::getOtrosIngredientes($presentacion->id));
+            array_push($otros_ingredientes, self::getOtrosIngredientes($presentacion->id,  $id_pedido));
         }
 
 
