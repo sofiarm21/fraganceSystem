@@ -174,6 +174,37 @@
             @endfor
 
         </div>
+        <div class='col-6 mt-5'>
+            <h5>
+            Envio
+        </h5>
+            <div class='row text-secondary font-weight-bold mt-3'>
+                <div class='col'>
+                    País
+                </div>
+                <div class='col'>
+                    Tipo de envío
+                </div>
+                <div class='col'>
+                    Precio
+                </div>
+                <div class='col'>
+                </div>
+            </div>
+            <div class='row text-secondary mt-3 mb-5'>
+                <div class='col'>
+                    {{$envio[0]->nombre}}
+                </div>
+                <div class='col'>
+                    {{$envio[0]->tipo_transporte}}
+                </div>
+                <div class='col'>
+                    $ {{$envio[0]->costo}}
+                </div>
+                <div class='col'>
+                </div>
+            </div>
+        </div>
     </div>
 
 @endsection

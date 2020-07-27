@@ -60,10 +60,19 @@ class PedidoDetailController extends Controller
         return $ingredientes;
     }
 
-    // function getMetodoEnvio($id_pedido){
-    //     $envio = DB::table('sms_pedido')
-    //     ->join('sms_cond_envio','sms_pedido.')
-    // }
+    function getMetodoEnvio($id_pedido){
+        $envio = DB::table('sms_pedido')
+        ->join('sms_envio','sms_pedido.cod_pais_c_e','=','sms_envio.cod_pais')
+        ->where('sms_pedido.codigo','=',$id_pedido)
+        ->join('sms_paises','sms_envio.cod_pais','=','sms_paises.codigo')
+        ->select(
+            'sms_envio.tipo_transporte',
+            'sms_envio.costo',
+            'sms_paises.nombre'
+            )
+        ->get();
+        return $envio;
+    }
 
     function getMetodoPago($id_pedido){
         $pago = DB::table('sms_pedido')
@@ -93,6 +102,7 @@ class PedidoDetailController extends Controller
 
         $presentaciones = self::getPresentaciones($id_pedido);
         $pago = self::getMetodoPago($id_pedido);
+        $envio = self::getMetodoEnvio($id_pedido);
 
         $ingredientes = [];
         $otros_ingredientes = [];
@@ -111,7 +121,8 @@ class PedidoDetailController extends Controller
             'pedido' => $pedido,
             'ingredientes' => $ingredientes,
             'ingredientes_otros' => $otros_ingredientes,
-            'metodos_pago' => $pago
+            'metodos_pago' => $pago,
+            'envio' => $envio
         ]);
 
 
