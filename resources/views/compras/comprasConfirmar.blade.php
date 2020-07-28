@@ -100,21 +100,84 @@
                     Número de cuotas
                 </div>
                 <div class='col'>
+                    Porcentaje
+                </div>
+                <div class='col'>
                     Descripción
                 </div>
             </div>
             <div class='row text-secondary'>
                 <div class='col'>
-                    {{$condicion_pago->tipo}}
-                </div>
-                <div class='col'>
-                    @if($condicion_pago->cantidad_cuotas == null)
-                        1
-                    @endif
-                    {{$condicion_pago->cantidad_cuotas}}
-                </div>
-                <div class='col'>
-                    {{$condicion_pago->descripcion}}
+                    @for($i=0; $i < count($metodos_pago); $i++)
+
+                            <div class='row text-secondary'>
+                                <div class='tipoPago col'>
+                                    @if ($metodos_pago[$i]->cantidad_cuotas != null)
+                                        @if ($i == 0)
+                                            {{$metodos_pago[$i]->tipo}}
+                                        @else
+                                            @if ($metodos_pago[$i]->cod_cond_pago != $metodos_pago[$i - 1]->cod_cond_pago)
+                                                {{$metodos_pago[$i]->tipo}}
+                                            @endif
+                                        @endif
+                                    @else
+                                        {{$metodos_pago[$i]->tipo}}
+                                    @endif
+                                </div>
+                                <div class='cantCuotas col'>
+                                    @if ($metodos_pago[$i]->cantidad_cuotas != null)
+                                        @if ($i == 0)
+                                            {{$metodos_pago[$i]->cantidad_cuotas}}
+                                        @else
+                                            @if ($metodos_pago[$i]->cod_cond_pago != $metodos_pago[$i - 1]->cod_cond_pago)
+                                                {{$metodos_pago[$i]->cantidad_cuotas}}
+                                            @endif
+                                        @endif
+                                    @else
+                                        1
+                                    @endif
+                                </div>
+                                <div class='porcentajeCuotas col'>
+                                    @if ($metodos_pago[$i]->cantidad_cuotas != null)
+
+                                            <p class='font-weight-bold mb-0'>
+                                                Pago {{$i + 1}}:
+                                            </p>
+                                                {{$metodos_pago[$i]->porcentaje_pago}} % ‣ $ {{$pedido->total * ($metodos_pago[$i]->porcentaje_pago / 100)}}
+                                            <p class='font-weight-bold mb-0'>
+                                                Recargo:
+                                            </p>
+                                            {{$metodos_pago[$i]->porcentaje_recargo}} % + $ {{$pedido->total * ($metodos_pago[$i]->porcentaje_recargo / 100)}}
+                                            <p class='font-weight-bold mb-0'>
+                                                Descuento:
+                                            </p>
+                                            {{$metodos_pago[$i]->porcentaje_descuento}} % - $ {{$pedido->total * ($metodos_pago[$i]->porcentaje_descuento / 100)}}
+                                    @else
+                                    <p class='font-weight-bold mb-0'>
+                                        Pago:
+                                    </p>
+                                        100 % - $ $monto_total
+                                    @endif
+                                </div>
+                                <div class='porcentajeCuotas col'>
+                                    @if ($metodos_pago[$i]->cantidad_cuotas != null)
+                                        @if ($i == 0)
+                                            {{$metodos_pago[$i]->descripcion}}
+                                        @else
+                                            @if ($metodos_pago[$i]->cod_cond_pago != $metodos_pago[$i - 1]->cod_cond_pago)
+                                                {{$metodos_pago[$i]->descripcion}}
+                                            @endif
+                                        @endif
+                                    @else
+                                        {{$metodos_pago[$i]->descripcion}}
+                                    @endif
+                                </div>
+                                <div class='col-12'>
+                                    <hr/>
+                                </div>
+                            </div>
+
+                    @endfor
                 </div>
             </div>
         </div>
@@ -129,6 +192,13 @@
             <a href='/Compras/realizar-compra/confirmar/{{$productor->id}}/{{$proveedor->id}}'>
                 <button type='submit' class="btn btn-info">
                     Confirmar
+                </button>
+            </a>
+        </div>
+        <div class='col-12 mb-5'>
+            <a href='/Compras/menu/{{$productor->id}}'>
+                <button type='submit' class="btn btn-info">
+                    Cancelar
                 </button>
             </a>
         </div>

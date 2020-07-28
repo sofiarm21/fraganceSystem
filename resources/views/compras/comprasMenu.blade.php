@@ -38,14 +38,14 @@
             <div class='row mt-3'>
                 @foreach($pedidos as $pedido)
                     @if($pedido->estado == 0)
-                        <div class="card col-3 mx-2 bg-white" style="width: 18rem;">
+                        <div class="card col-3 m-2 bg-white" style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">{{$pedido->nombre}}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">Pedido</h6>
                                 <p class="card-text font-weight-bold">Codigo pedido</p>
                                 <p class="card-text">{{$pedido->codigo}}</p>
                                 <p class="card-text">Fecha de creación <br/> {{$pedido->fecha_creacion}}</p>
-                                <a href='/' class="card-link">
+                                <a href='/Compras/pedido/detalle/{{$productor->id}}/{{$pedido->id}}/{{$pedido->codigo}}' class="card-link">
                                     Detalle
                                 </a>
                             </div>
@@ -59,14 +59,14 @@
             <div class='row mt-3'>
                 @foreach($pedidos as $pedido)
                     @if($pedido->estado != 0 && $pedido->fecha_recibido == null)
-                        <div class="card col-3 mx-2 bg-white" style="width: 18rem;">
+                        <div class="card col-3 m-2 bg-white" style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">{{$pedido->nombre}}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">Pedido</h6>
                                 <p class="card-text font-weight-bold">Codigo pedido</p>
                                 <p class="card-text">{{$pedido->codigo}}</p>
                                 <p class="card-text">Fecha de creación <br/> {{$pedido->fecha_creacion}}</p>
-                                <a href='/' class="card-link">
+                                <a href='/Compras/pedido/detalle/{{$productor->id}}/{{$pedido->id}}/{{$pedido->codigo}}' class="card-link">
                                     Detalle
                                 </a>
                             </div>
@@ -80,14 +80,14 @@
             <div class='row mt-3'>
                 @foreach($pedidos as $pedido)
                     @if($pedido->estado != 0 && $pedido->fecha_recibido != null)
-                        <div class="card col-3 mx-2 bg-white" style="width: 18rem;">
+                        <div class="card col-3 m-2 bg-white" style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">{{$pedido->nombre}}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">Pedido</h6>
                                 <p class="card-text font-weight-bold">Codigo pedido</p>
                                 <p class="card-text">{{$pedido->codigo}}</p>
                                 <p class="card-text">Fecha de creación <br/> {{$pedido->fecha_creacion}}</p>
-                                <a href='/' class="card-link">
+                                <a href='/Compras/pedido/detalle/{{$productor->id}}/{{$pedido->id}}/{{$pedido->codigo}}' class="card-link">
                                     Detalle
                                 </a>
                             </div>

@@ -94,6 +94,13 @@
                 </button>
             </a>
         </div>
+        <div class='col-12 mb-5'>
+            <a href='/Compras/menu/{{$productor->id}}'>
+                <button type='submit' class="btn btn-info">
+                    Cancelar
+                </button>
+            </a>
+        </div>
 
 
     </div>
