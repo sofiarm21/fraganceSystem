@@ -99,7 +99,6 @@ class ContratoDetailController extends Controller
         $formula_final = self::getFormulaFinal($id_productor);
         $variables = self::getVariablesFinales();
 
-        var_dump($formula_final);
 
         foreach ($formula_final as $variable){
 
