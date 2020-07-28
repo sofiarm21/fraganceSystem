@@ -403,8 +403,6 @@ class ComprasRealizarController extends Controller
 
         $pedido->cod_cond_pago_c_p = $cod_cond_pago;
 
-        echo($condicion_pago);
-
         return view('compras/comprasConfirmar', [
             'proveedor' => $proveedor,
             'productor' => $productor,
