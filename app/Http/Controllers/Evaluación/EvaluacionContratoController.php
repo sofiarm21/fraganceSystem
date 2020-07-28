@@ -22,7 +22,6 @@ class EvaluacionContratoController extends Controller
             'sms_escala.id_productor','=',$id_productor,
             'sms_escala.fecha_final','=',null
         );
-        var_dump($escala);
         return $escala;
     }
 
@@ -71,7 +70,6 @@ class EvaluacionContratoController extends Controller
         // ->get();
 
         foreach ($formula_inicial as $variable){
-            var_dump($variable);
             if (($request->input($variable->id_variable) > $variable->rango_final) || ($request->input($variable->id_variable) < $variable->rango_inicial)){
                 return back()->withInput();
             }
@@ -101,7 +99,8 @@ class EvaluacionContratoController extends Controller
         return view('evaluación/evaluacionResultado', [
             'productor' => $productor,
             'proveedor' => $proveedor,
-            'aprobado' => $aprobado
+            'aprobado' => $aprobado,
+            'resultado' => $evaluacion_resultado->resultado
         ]);
 
     }
