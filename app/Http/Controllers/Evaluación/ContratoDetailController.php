@@ -102,7 +102,7 @@ class ContratoDetailController extends Controller
         ->get();
 
 
-        return view('contratoDetail', [
+        return view('evaluación/contratoDetail', [
             'productor' => $productor,
             'proveedor' => $proveedor,
             'contrato' => $contrato,

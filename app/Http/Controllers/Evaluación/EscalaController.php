@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use App\Escala;
 use App\Productor;
 
+
+
 class EscalaController extends Controller
 {
 
@@ -17,19 +19,19 @@ class EscalaController extends Controller
         $productor = Productor::findOrFail($id);
 
         if ($request->input('rango_inicial') == null  OR $request->input('rango_final') == null){
-            return view('escala', [
+            return view('evaluación/escala', [
                 'productor' => $productor,
                 'errorMessage' => 'Debe llenar todos los campos'
             ]);
         }
         else if ($request->input('rango_inicial') > $request->input('rango_final')){
-            return view('escala', [
+            return view('evaluación/escala', [
                 'productor' => $productor,
                 'errorMessage' => 'El rango inicial debe ser menor que el rango final'
             ]);
         }
         else if ($request->input('rango_inicial') == $request->input('rango_final')){
-            return view('escala', [
+            return view('evaluación/escala', [
                 'productor' => $productor,
                 'errorMessage' => 'El rango inicial debe ser distinto al rango final'
             ]);
@@ -61,7 +63,7 @@ class EscalaController extends Controller
         $productor = Productor::findOrFail($id);
 
 
-        return view('escala', [
+        return view('evaluación/escala', [
             'productor' => $productor,
             'errorMessage' => null,
         ]);
