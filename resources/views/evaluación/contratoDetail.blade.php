@@ -326,7 +326,6 @@
                 Exlusividad
             </p>
             <p class='text-secondary font-weight-bold'>
-
                     Este contrato es una relación exclusiva entre el productor - proveedor
             </p>
             @endif
@@ -360,6 +359,13 @@
                     </div>
                 </form>
             @endif
+        </div>
+        <div class='col-12 mb-5'>
+            <a href='/Evaluacion/contrato/cancelar/{{$productor->id}}/{{$proveedor->id}}/{{$contrato->codigo}}' class='text-light'>
+                <button type='button' class='btn btn-info mt-5'>
+                    Cancelar contrato
+                </button>
+            </a>
         </div>
 
 

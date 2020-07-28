@@ -17,9 +17,8 @@ class EvaluacionDetailController extends Controller
         $contratos = DB::table('sms_contrato')
         ->join('sms_proveedores','sms_contrato.id_proveedor','=','sms_proveedores.id')
         ->where('sms_contrato.id_productor','=',$id_productor)
-        ->where('sms_contrato.fecha_cancelacion','=',null)
-        ->where('sms_contrato.motivo_no_renovacion','=',null)
-
+        ->where('sms_contrato.fecha_cancelacion','=', null)
+        ->where('sms_contrato.motivo_no_renovacion','=', null)
         ->select(
                 'sms_proveedores.nombre',
                 'sms_contrato.id_proveedor',

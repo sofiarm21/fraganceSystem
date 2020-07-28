@@ -10,6 +10,9 @@
             <h4>
                 {{$proveedor->nombre}}
             </h4>
+            <p>
+                Calificación: {{$resultado}}
+            </p>
             <h5 class='font-weight-bold'>
                 @if ($aprobado)
                     Aprobado
@@ -20,7 +23,7 @@
             </h5>
                 @if ($aprobado)
                     <p class='text-secondary mt-5'>
-                        Puede proceder a crear un cotrato con este proveedor
+                        Puede proceder a crear un contrato con este proveedor
                     </p>
                     <a href='/Evaluacion/generacion-contrato/{{$productor->id}}/{{$proveedor->id}}' class='text-light'>
                         <button type="button" class="btn btn-info mb-4">
