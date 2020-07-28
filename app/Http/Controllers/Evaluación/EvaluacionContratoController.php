@@ -26,27 +26,52 @@ class EvaluacionContratoController extends Controller
         return $escala;
     }
 
-    public function evaluar($id_productor, $id_proveedor, Request $request){
 
-        $productor = Productor::findOrFail($id_productor);
-        $proveedor = Proveedor::findOrFail($id_proveedor);
 
-        $formula_inicial = DB::table('sms_eval_criterio')
-        ->join('sms_escala','sms_eval_criterio.id_productor','=', 'sms_eval_criterio.id_productor')
+    function getFormulaInicial($id_productor){
+        $formula_final = DB::table('sms_eval_criterio')
+        ->join('sms_escala','sms_eval_criterio.id_productor','=', 'sms_escala.id_productor')
         ->where('sms_eval_criterio.id_productor','=',$id_productor)
+        ->where('sms_escala.id_productor','=',$id_productor)
         ->where('sms_eval_criterio.fecha_final','=',null)
-        ->where('sms_eval_criterio.tipo_formula','=','i')
         ->where('sms_escala.fecha_final','=',null)
+        ->where('sms_eval_criterio.tipo_formula','=','i')
+        ->join('sms_variable','sms_eval_criterio.id_variable','=','sms_variable.id')
         ->select(
             'sms_eval_criterio.id_variable',
             'sms_eval_criterio.peso',
             'sms_escala.rango_inicial',
             'sms_escala.rango_final',
+            'sms_variable.id'
         )
+        ->distinct()
         ->get();
 
+        return $formula_final;
+    }
+
+    public function evaluar($id_productor, $id_proveedor, Request $request){
+
+        $productor = Productor::findOrFail($id_productor);
+        $proveedor = Proveedor::findOrFail($id_proveedor);
+        $formula_inicial = self::getFormulaInicial($id_productor);
+
+        // $formula_inicial = DB::table('sms_eval_criterio')
+        // ->join('sms_escala','sms_eval_criterio.id_productor','=', 'sms_eval_criterio.id_productor')
+        // ->where('sms_eval_criterio.id_productor','=',$id_productor)
+        // ->where('sms_eval_criterio.fecha_final','=',null)
+        // ->where('sms_eval_criterio.tipo_formula','=','i')
+        // ->where('sms_escala.fecha_final','=',null)
+        // ->select(
+        //     'sms_eval_criterio.id_variable',
+        //     'sms_eval_criterio.peso',
+        //     'sms_escala.rango_inicial',
+        //     'sms_escala.rango_final',
+        // )
+        // ->get();
+
         foreach ($formula_inicial as $variable){
-            if (($request->input($variable->id_variable) > 10) || ($request->input($variable->id_variable) < 1)){
+            if (($request->input($variable->id_variable) > {{$variable->rango_inicial}}) || ($request->input($variable->id_variable) < $variable->rango_final)){
                 return back()->withInput();
             }
 
@@ -191,8 +216,8 @@ class EvaluacionContratoController extends Controller
         ->where('sms_variable.tipo','=','i')
         ->get();
 
-        $escala = self::getEscala($id_productor);
-
+        //$escala = self::getEscala($id_productor);
+        $formula_inicial = self::getFormulaInicial($id_productor);
 
         return view('evaluación/evaluacionContrato', [
             'productor' => $productor,
@@ -203,7 +228,8 @@ class EvaluacionContratoController extends Controller
             'condiciones_pago' => $condiciones_pago,
             'condiciones_envio' => $condiciones_envio,
             'variables' => $variables,
-            'escala' => $escala
+            'formula_inicial' => $formula_inicial[0]
+            //'escala' => $escala
         ]);
     }
 }
