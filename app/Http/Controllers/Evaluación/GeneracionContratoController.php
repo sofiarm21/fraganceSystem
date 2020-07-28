@@ -204,21 +204,20 @@ class GeneracionContratoController extends Controller
                         'cod_mp_esencia' => $producto_codigo
                     ]
                 );
-
         }
         if ($request->ingrediente_codigo != null){
-        foreach($request->ingrediente_codigo as $ingrediente_codigo){
+            foreach($request->ingrediente_codigo as $ingrediente_codigo){
+                echo "seleccionado $$ingrediente_codigo";
+                    DB::table('sms_det_contrato')->insert(
+                        [
+                            'cod_contrato' => $contrato->codigo,
+                            'id_productor' => $id_productor,
+                            'id_proveedor' => $id_proveedor,
+                            'cod_componente_ing' => $ingrediente_codigo
+                        ]
+                    );
 
-                DB::table('sms_det_contrato')->insert(
-                    [
-                        'cod_contrato' => $contrato->codigo,
-                        'id_productor' => $id_productor,
-                        'id_proveedor' => $id_proveedor,
-                        'cod_componente_ing' => $ingrediente_codigo
-                    ]
-                );
-
-        }
+            }
         }
 
         foreach($request->condiciones_pago as $cod_condicion_pago){
@@ -351,7 +350,7 @@ class GeneracionContratoController extends Controller
          $condiciones_pago = self::getCondicionesPago($id_proveedor);
          $condiciones_envio = self::getCondicionesEnvio($id_productor, $id_proveedor);
 
-        return view('evaluacionGeneracionContrato', [
+        return view('evaluación/evaluacionGeneracionContrato', [
             'productor' => $productor,
             'proveedor' => $proveedor,
             'productos' => $productos_disponibles,

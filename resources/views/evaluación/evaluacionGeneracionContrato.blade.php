@@ -5,7 +5,7 @@
 
 @section('content')
 
-    <div class='EvaluacionContrato row mt-4'>
+    <div class='EvaluacionGeneracionContrato row mt-4'>
         <div class='col-12'>
             <h5>
                 Información del proveedor
@@ -46,13 +46,16 @@
                 </div>
             </div>
         </div>
-        <div class='col-12 mt-5'>
+        <div class='col-12'>
             <h5>
                 Productos
             </h5>
         </div>
+
+        <form action='/Evaluacion/generacion-contrato/create/{{$productor->id}}/{{$proveedor[0]->id}}' method='POST' class='row'>
             @foreach ($productos as $producto)
             <div class='col-4 p-4'>
+                <input class="form-check-input" type="checkbox" name='producto_codigo[]' id='{{$producto->codigo}}' value='{{$producto->codigo}}'/>
                 <div class='card bg-white p-0'>
                     <div class='productCard card-img-top'>
 
@@ -61,9 +64,6 @@
                         <div class='text-secondary'>
                             <p class='font-weight-bold'>
                                 {{$producto->nombre}}
-                            </p>
-                            <p class='font-weight-bold'>
-                                $ {{$producto->precio}} - {{$producto->volml}} ml
                             </p>
                             <div class='row '>
                                 <div class='col'>
@@ -175,6 +175,7 @@
             @endif
                 @foreach ($ingredientes_otros as $ingrediente)
                 <div class='col-4 p-4'>
+                    <input class="form-check-input" type="checkbox" name='ingrediente_codigo[]' id='{{$ingrediente->codigo}}' value='{{$ingrediente->codigo}}'/>
                     <div class='card bg-white p-0'>
                         <div class='productCard card-img-top'>
 
@@ -184,9 +185,7 @@
                                 <p class='font-weight-bold'>
                                     {{$ingrediente->nombre}}
                                 </p>
-                                <p class='font-weight-bold'>
-                                    $ {{$ingrediente->precio}} - {{$ingrediente->volml}} ml
-                                </p>
+
 
                                 <div class='row'>
                                     <div class='col'>
@@ -238,16 +237,20 @@
                         @for ($i = 0; $i < count($condiciones_pago); $i++)
                             <div class='row text-secondary'>
                                 <div class='tipoPago col'>
-
                                     @if ($condiciones_pago[$i]->cantidad_cuotas != null)
                                         @if ($i == 0)
+                                            <input class="form-check-input" type="checkbox" name='condiciones_pago[]' value='{{$condiciones_pago[$i]->codigo}}' id='{{$condiciones_pago[$i]->codigo}}'/>
+
                                             {{$condiciones_pago[$i]->tipo}}
                                         @else
                                             @if ($condiciones_pago[$i]->cod_cond_pago != $condiciones_pago[$i - 1]->cod_cond_pago)
+                                            <input class="form-check-input" type="checkbox" name='condiciones_pago[]' value='{{$condiciones_pago[$i]->codigo}}' id='{{$condiciones_pago[$i]->codigo}}'/>
+
                                                 {{$condiciones_pago[$i]->tipo}}
                                             @endif
                                         @endif
                                     @else
+                                        <input class="form-check-input" type="checkbox" name='condiciones_pago[]' value='{{$condiciones_pago[$i]->codigo}}' id='{{$condiciones_pago[$i]->codigo}}'/>
                                         {{$condiciones_pago[$i]->tipo}}
                                     @endif
                                 </div>
@@ -296,82 +299,83 @@
                         @endfor
                         </div>
                     </div>
-                        <div class='col-6 mt-5'>
-                            <div class='row'>
-                                <div class='col-12 mb-4'>
-                                    <h5>
-                                        Condiciones de envio
-                                    </h5>
+                    <div class='col-6 mt-5'>
+                        <div class='row'>
+                            <div class='col-12 mb-4'>
+                                <h5>
+                                    Condiciones de envio
+                                </h5>
+                            </div>
+                            <div class='col-4 font-weight-bold mt-3 mb-4'>
+
+                                    Pais
+
+                            </div>
+                            <div class='col-4 font-weight-bold mt-3 mb-4'>
+
+                                    Tipo
+
+                            </div>
+                            <div class='col-4 font-weight-bold mt-3 mb-4'>
+
+                                    Precio
+
+                            </div>
+                        </div>
+                        @foreach ($condiciones_envio as $condicion_envio)
+                            <div class='row text-secondary'>
+                                <div class='col'>
+
+                                    <input class="form-check-input" type="checkbox" name='condicion_envio[]' value='{{$condicion_envio->cod_pais}}' id='{{$condicion_envio->cod_pais}}'/>
+                                    {{$condicion_envio->envio_pais}}
                                 </div>
-                                <div class='col-4 font-weight-bold mt-3 mb-4'>
-
-                                        Pais
-
+                                <div class='col'>
+                                    {{$condicion_envio->envio_transporte}}
                                 </div>
-                                <div class='col-4 font-weight-bold mt-3 mb-4'>
-
-                                        Tipo
-
+                                <div class='col'>
+                                    {{$condicion_envio->envio_costo}}
                                 </div>
-                                <div class='col-4 font-weight-bold mt-3 mb-4'>
-
-                                        Precio
-
+                                <div class='col-12'>
+                                    <hr/>
                                 </div>
                             </div>
-                            @foreach ($condiciones_envio as $condicion_envio)
-                                <div class='row text-secondary'>
-                                    <div class='col'>
-                                        {{$condicion_envio->envio_pais}}
-                                    </div>
-                                    <div class='col'>
-                                        {{$condicion_envio->envio_transporte}}
-                                    </div>
-                                    <div class='col'>
-                                        {{$condicion_envio->envio_costo}}
-                                    </div>
-                                    <div class='col-12'>
-                                        <hr/>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+                        @endforeach
                     </div>
                 </div>
-
             </div>
-
-            <div class='col-12 mt-5 mb-4'>
+            <div class='col-12 my-5'>
                 <h5>
-                    Evaluación
+                    Exclusividad
                 </h5>
+                <input class="form-check-input" type="checkbox" name='exclusividad' value=true id='exclusividad'/>
                 <p class='text-secondary'>
-                    Para las proximas preguntas evalue este proveedor en una escala del 1 al 10. Siendo 1 muy malo y 10 muy bueno.
+                    Quiero que la relación con este proveedor sea exclusiva
                 </p>
             </div>
-            <form action='/Evaluacion/creacion-contrato/evaluar/{{$productor->id}}/{{$id_proveedor}}' method='post'>
-                <div class='col-12'>
-                    @foreach ($variables as $variable)
-                        <div class='row mb-3'>
-                            <div class='col-4'>
-                                {{$variable->descripcion}}
-                            </div>
-                            <div class='col-1'>
-                                <input type='text' name='{{$variable->id}}' placeholder='1-10'/>
-                            </div>
-                        </div>
-                    @endforeach
-                    {{ csrf_field() }}
-                </div>
-
-
-                <div class='col-6 my-5'>
-                    <button type='submit' class="btn btn-info">
-                        Crear fórmula
-                    </button>
-                </div>
-            </form>
-
+            <div class='col-12 mb-5'>
+                <h5>
+                    Información
+                </h5>
+                <p class='text-secondary'>
+                    Este contrato tendra vigencia de un año desde el momento de su generación.
+                </p>
+                <p class='text-secondary font-weight-bold'>
+                    Fecha finalizacion: {{ date('d-m-Y',strtotime('+1 year'))}}
+                </p>
+                <p class='text-secondary'>
+                    Se debe evaluar esta relación dos meses antes de la culminación del contrato
+                </p>
+                <p class='text-secondary font-weight-bold'>
+                    Fecha evaluación: {{ date('d-m-Y',strtotime('+1 year , -2 months'))}}
+                </p>
+            </div>
+            <div class='col-6 mb-5'>
+                {{ csrf_field() }}
+                <button type='submit' class="btn btn-info">
+                    Generar contrato
+                </button>
+            </div>
+        </form>
     </div>
 
 @endsection

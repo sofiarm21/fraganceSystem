@@ -32,23 +32,23 @@ class FormulaInicialController extends Controller
 
         foreach ($variables as $variable){
             if ($request->input($variable->id) == null){
-                return view('formulaInicial', [
+                return view('evaluación/formulaInicial', [
                     'productor' => $productor,
                     'variables' => $variables,
                     'escala' => $escala,
                     'errorMessage' => 'Debe llenar todos los campos'
                 ]);
             }
-            else if ($request->input($variable->id) > $escala[0]->rango_final){
-                return view('formulaInicial', [
+            else if ($request->input($variable->id) > 100){
+                return view('evaluación/formulaInicial', [
                     'productor' => $productor,
                     'variables' => $variables,
                     'escala' => $escala,
                     'errorMessage' => 'El porcentaje no debe sobrepasar a la escala'
                 ]);
             }
-            else if ($request->input($variable->id) < $escala[0]->rango_inicial){
-                return view('formulaInicial', [
+            else if ($request->input($variable->id) < 0){
+                return view('evaluación/formulaInicial', [
                     'productor' => $productor,
                     'variables' => $variables,
                     'escala' => $escala,
@@ -57,17 +57,6 @@ class FormulaInicialController extends Controller
             }
             $sum += $request->input($variable->id);
         }
-
-        if ($sum <> $escala[0]->rango_final){
-            return view('formulaInicial', [
-                'productor' => $productor,
-                'variables' => $variables,
-                'escala' => $escala,
-                'errorMessage' => 'La suma de los porcentajes no es válida'
-            ]);
-
-        }
-
 
         DB::table('sms_eval_criterio')
             -> where('fecha_final', null)
@@ -159,15 +148,15 @@ class FormulaInicialController extends Controller
         ->where('sms_variable.tipo','=','i')
         ->get();
         $escala = DB::table('sms_escala')
-        ->select('sms_escala.rango_inicial', 'sms_escala.rango_final')
-        ->from('sms_escala')
-        ->where('sms_escala.id_productor','=',$id)
-        ->where('sms_escala.fecha_final','=',null)
-        ->get();
+            ->select('sms_escala.rango_inicial', 'sms_escala.rango_final')
+            ->from('sms_escala')
+            ->where('sms_escala.id_productor','=',$id)
+            ->where('sms_escala.fecha_final','=',null)
+            ->get();
 
 
 
-        return view('formulaInicial', [
+        return view('evaluación/formulaInicial', [
             'productor' => $productor,
             'variables' => $variables,
             'escala' => $escala,

@@ -15,7 +15,7 @@
             </h5>
             <p class='text text-secondary'>
                 Eliga las variables que quiere evaluar y asigneles un porcentaje segun su importancia.
-                La escala de evaluación es de {{$escala[0]->rango_inicial}}  - {{$escala[0]->rango_final}}
+                El porcentaje es de 0% a 100%
             </p>
 
 

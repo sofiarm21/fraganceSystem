@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Evaluación;
+namespace App\Http\Controllers\Compras;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Productor;
 
-class EvaluacionController extends Controller
+class ComprasController extends Controller
 {
 
-    public function index(){
+    public function view(){
 
         $productores = Productor::all();
 
-        return view('evaluación/evaluacion', [
+        return view('compras/compras', [
             'productores' => $productores,
         ]);
     }

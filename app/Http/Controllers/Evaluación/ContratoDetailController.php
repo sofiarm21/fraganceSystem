@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\EvaluacionResultado;
 use App\Productor;
 use App\Proveedor;
 use App\Contrato;
@@ -19,12 +20,122 @@ class ContratoDetailController extends Controller
         ->where('sms_contrato.id_productor','=',$id_productor)
         ->select(
                 'sms_proveedores.nombre',
-                'sms_contrato.fecha'
+                'sms_contrato.fecha',
             )
         ->distinct()
         ->get();
 
         return $contratos;
+    }
+
+    function getContrato($cod_contrato){
+        $contrato = DB::table('sms_contrato')
+        ->leftJoin('sms_renueva','sms_renueva.cod_contrato','=','sms_contrato.codigo')
+        ->where('sms_contrato.codigo','=',$cod_contrato)
+        ->select(
+                'sms_proveedores.nombre',
+                'sms_contrato.fecha',
+                'sms_renueva.fecha AS fecha_renueva'
+            )
+        ->distinct()
+        ->get();
+
+        return $contrato;
+
+    }
+
+    function getVariablesFinales(){
+        $variables = DB::table('sms_variable')
+        ->select(
+            'nombre',
+            'descripcion',
+            'id'
+        )
+        ->where('tipo','=','f')
+        ->get();
+
+        return $variables;
+    }
+
+    // function getEscala($id_productor){
+    //     $escala = DB::table('sms_escala')
+    //     ->select('sms_escala.rango_inicial', 'sms_escala.rango_final')
+    //     ->from('sms_escala')
+    //     ->where('sms_escala.id_productor','=',$id)
+    //     ->where('sms_escala.fecha_final','=',null)
+    //     ->get()
+    //     ->values([0]);
+    //
+    //     return $escala;
+    // }
+
+    function getFormulaFinal($id_productor){
+        $formula_final = DB::table('sms_eval_criterio')
+        ->join('sms_escala','sms_eval_criterio.id_productor','=', 'sms_escala.id_productor')
+        ->where('sms_eval_criterio.id_productor','=',$id_productor)
+        ->where('sms_escala.id_productor','=',$id_productor)
+        ->where('sms_eval_criterio.fecha_final','=',null)
+        ->where('sms_escala.fecha_final','=',null)
+        ->where('sms_eval_criterio.tipo_formula','=','f')
+        ->join('sms_variable','sms_eval_criterio.id_variable','=','sms_variable.id')
+        ->select(
+            'sms_eval_criterio.id_variable',
+            'sms_eval_criterio.peso',
+            'sms_escala.rango_inicial',
+            'sms_escala.rango_final',
+            'sms_variable.id'
+        )
+        ->distinct()
+        ->get();
+
+        return $formula_final;
+    }
+
+
+    public function evaluarFinal($id_productor, $id_proveedor, $codigo_contrato, Request $request){
+
+        $productor = Productor::findOrFail($id_productor);
+        $proveedor = Proveedor::findOrFail($id_proveedor);
+        $formula_final = self::getFormulaFinal($id_productor);
+        $variables = self::getVariablesFinales();
+
+
+        foreach ($formula_final as $variable){
+
+
+            if (($request->input($variable->id) > $variable->rango_final) || ($request->input($variable->id) < $variable->rango_inicial)){
+                return back()->withInput();
+            }
+        }
+
+        $evaluacion_resultado = new EvaluacionResultado();
+        $evaluacion_resultado->id_productor=$id_productor;
+        $evaluacion_resultado->id_proveedor=$id_proveedor;
+        $evaluacion_resultado->fecha_realizada = date('Y-m-d H:i:s');
+        $evaluacion_resultado->tipo_eval = 'f';
+
+        $suma = 0;
+        foreach ($formula_final as $variable){
+            $suma += $request->input($variable->id) * ($variable->peso / 100);
+        }
+
+        $evaluacion_resultado->resultado = $suma;
+        $evaluacion_resultado->save();
+
+        $aprobado = false;
+        if ($evaluacion_resultado->resultado > $formula_final[0]->rango_final * 0.8){
+            $aprobado = true;
+        }
+
+
+        return view('evaluación/evaluacionFinalResultado', [
+            'productor' => $productor,
+            'proveedor' => $proveedor,
+            'aprobado' => $aprobado,
+            'resultado' => $evaluacion_resultado->resultado,
+            'cod_contrato' => $codigo_contrato
+        ]);
+
     }
 
 
@@ -35,6 +146,9 @@ class ContratoDetailController extends Controller
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
         $contrato = Contrato::findOrFail($codigo_contrato);
+        $variables = self::getVariablesFinales();
+        $formula_final=self::getFormulaFinal($id_productor);
+        //$escala = self::getEscala($id_productor);
 
 
         $productos_contratados = DB::table('sms_det_contrato')
@@ -101,8 +215,7 @@ class ContratoDetailController extends Controller
         ->distinct()
         ->get();
 
-
-        return view('contratoDetail', [
+        return view('evaluación/contratoDetail', [
             'productor' => $productor,
             'proveedor' => $proveedor,
             'contrato' => $contrato,
@@ -110,6 +223,9 @@ class ContratoDetailController extends Controller
             'ingredientes_otros' => $ingredientes_otros_contratados,
             'condiciones_pago' => $condiciones_pago,
             'condiciones_envio' => $condiciones_envio,
+            'variables' => $variables,
+            'formula_final'=>$formula_final[0]
+
         ]);
     }
 

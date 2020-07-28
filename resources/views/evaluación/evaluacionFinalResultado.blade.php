@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('title','Fragance System')
-@section('pageTitle', 'Resultado')
+@section('pageTitle', 'Resultado Evaluación Final')
 
 @section('content')
 
@@ -10,37 +10,43 @@
             <h4>
                 {{$proveedor->nombre}}
             </h4>
+            Resultado: {{$resultado}}
             <h5 class='font-weight-bold'>
                 @if ($aprobado)
                     Aprobado
                 @else
-
-                    Relación negada
+                    No se puede renovar este contrato
                 @endif
             </h5>
                 @if ($aprobado)
                     <p class='text-secondary mt-5'>
-                        Puede proceder a crear un cotrato con este proveedor
+                        Puede renovar este contrato
                     </p>
-                    <a href='/Evaluacion/generacion-contrato/{{$productor->id}}/{{$proveedor->id}}' class='text-light'>
+                    <div class='row'>
+                        <div class='col-12'>
+                    <a href='/Evaluacion/formula-final/renovar/{{$productor->id}}/{{$proveedor->id}}/{{$cod_contrato}}' class='text-light'>
                         <button type="button" class="btn btn-info mb-4">
-                            Proceder a crear un contrato
+                            Renovar contrato
                         </button>
                     </a>
                     <a href='/Evaluacion/{{$productor->id}}' class='text-light'>
-                        <button type="button" class="btn btn-info">
-                            Regresar a módulo evaluación
+                        <button type="button" class="btn btn-info mb-4">
+                            No renovar
                         </button>
                     </a>
+                    
+
                 @else
                     <p class='text-secondary mt-5'>
-                        El proveedor no cuenta con los resultados de la evaluación suficientes como para crear un contrato con él
+                        El proveedor no cuenta con los resultados de la evaluación suficientes como para renovar un contrato con él
                     </p>
                     <a href='/Evaluacion/{{$productor->id}}' class='text-light'>
                         <button type="button" class="btn btn-info">
                             Regresar a módulo evaluación
                         </button>
                     </a>
+                </div>
+                    </div>
                 @endif
 
         </div>

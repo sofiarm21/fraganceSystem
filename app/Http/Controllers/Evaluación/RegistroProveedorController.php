@@ -11,6 +11,21 @@ use App\Proveedor;
 
 class RegistroProveedorController extends Controller
 {
+
+    function getMisProveedores($id){
+        $mis_proveedores = DB::table('sms_contrato')
+        ->select(
+            'sms_contrato.id_proveedor',
+
+        )
+        ->where('id_productor','=',$id)
+        ->where('fecha_cancelacion','=',null)
+        ->where('motivo_no_renovacion','=',null)
+        ->get();
+
+        return $mis_proveedores;
+    }
+
     public function view($id){
 
 
@@ -97,8 +112,32 @@ class RegistroProveedorController extends Controller
               ->distinct()
               ->get();
 
-        return view('evaluacionRegistroProveedor', [
-            'proveedores' => $proveedoresDisponibles,
+
+        $flag = 0;
+        $posbiles_proveedores = [];
+        $mis_proveedores = self::getMisProveedores($id);
+
+        //refactorizar
+        foreach ($proveedoresDisponibles as $proveedor){
+            $flag = 0;
+
+            foreach ($mis_proveedores as $mi_proveedor){
+
+                if ($proveedor->proveedor_id == $mi_proveedor->id_proveedor){
+                    $flag = 1;
+                }
+            }
+            if ($flag == 0){
+                array_push($posbiles_proveedores, $proveedor);
+            }
+        }
+
+
+
+
+
+        return view('evaluación/evaluacionRegistroProveedor', [
+            'proveedores' => $posbiles_proveedores,
             'productor_id' => $id
         ]);
     }
