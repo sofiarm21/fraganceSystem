@@ -346,7 +346,7 @@
                     Evaluación
                 </h5>
                 <p class='text-secondary'>
-                    Para las proximas preguntas evalue este proveedor en una escala del 1 al 10. Siendo 1 muy malo y 10 muy bueno.
+                    Para las proximas preguntas evalue este proveedor en una escala del {{$escala->rango_inicial}} a {{$escala->rango_final}}
                 </p>
             </div>
             <form action='/Evaluacion/creacion-contrato/evaluar/{{$productor->id}}/{{$id_proveedor}}' method='post'>
