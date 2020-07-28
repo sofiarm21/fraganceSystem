@@ -16,7 +16,7 @@ use App\EvaluacionResultado;
 class EvaluacionContratoController extends Controller
 {
 
-    public function evaluar($id_productor, $id_proveedor, Request $request){
+    public function evaluar($id_productor, $id_proveedor,  Request $request){
 
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
@@ -65,7 +65,7 @@ class EvaluacionContratoController extends Controller
         return view('evaluación/evaluacionResultado', [
             'productor' => $productor,
             'proveedor' => $proveedor,
-            'aprobado' => $aprobado
+            'aprobado' => $aprobado,
         ]);
 
     }

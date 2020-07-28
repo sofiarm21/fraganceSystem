@@ -35,7 +35,7 @@
 
                 @foreach ($contratos as $contrato)
 
-                    @if(\Carbon\Carbon::now()->diffInDays($contrato->fecha.'+1 year, -2 months', false) > 0)
+                    @if(\Carbon\Carbon::now()->diffInDays($contrato->fecha.'+1 year, -2 months', false) > 0 )
                         <div class="card col-3 mx-2 bg-white" style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">{{$contrato->nombre}}</h5>
@@ -57,10 +57,10 @@
                         Contratos proximos a vencerse
                     </h5>
                 </div>
-
                 @foreach ($contratos as $contrato)
 
                     @if($data_difference = \Carbon\Carbon::now()->diffInDays($contrato->fecha.'+1 year, -2 months', false) < 0)
+
                         <div class="card col-3 mx-2 bg-white" style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">{{$contrato->nombre}}</h5>
