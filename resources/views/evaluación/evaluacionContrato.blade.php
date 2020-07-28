@@ -346,7 +346,7 @@
                     Evaluación
                 </h5>
                 <p class='text-secondary'>
-                    Para las proximas preguntas evalue este proveedor en una escala del 1 al 10. Siendo 1 muy malo y 10 muy bueno.
+                    Para las proximas preguntas evalue este proveedor en una escala del {{$formula_inicial->rango_inicial}} a {{$formula_inicial->rango_final}}
                 </p>
             </div>
             <form action='/Evaluacion/creacion-contrato/evaluar/{{$productor->id}}/{{$id_proveedor}}' method='post'>
@@ -357,7 +357,7 @@
                                 {{$variable->descripcion}}
                             </div>
                             <div class='col-1'>
-                                <input type='text' name='{{$variable->id}}' placeholder='1-10'/>
+                                <input type='text' name='{{$variable->id}}' placeholder='{{$formula_inicial->rango_inicial}} - {{$formula_inicial->rango_final}}'/>
                             </div>
                         </div>
                     @endforeach
