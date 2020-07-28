@@ -5,7 +5,7 @@
 
 @section('content')
 
-    <div class='Compras row justify-content-center'>
+    <div class='Compras row justify-content-center mt-5'>
 
             @foreach ($productores as $productor)
                 <div class='col-7 py-2'>
