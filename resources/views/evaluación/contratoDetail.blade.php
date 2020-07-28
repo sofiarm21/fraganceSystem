@@ -331,7 +331,38 @@
             </p>
             @endif
         </div>
+        <div class='col-12'>
+            @if($data_difference = \Carbon\Carbon::now()->diffInDays($contrato->fecha.'+1 year, -2 months', false) < 0)
+                <h5>
+                    Evaluación Final
+                </h5>
+                <p class='text-secondary'>
+                    Para las proximas preguntas evalue este proveedor en una escala del {{$formula_final->rango_inicial}} al {{$formula_final->rango_final}}.
+                </p>
+                <form action='' method='post' class='row'>
+                    <div class='col-12'>
+                        @foreach ($variables as $variable)
+                            <div class='row mb-3'>
+                                <div class='col-4'>
+                                    {{$variable->descripcion}}
+                                </div>
+                                <div class='col-1'>
+                                    <input type='text' name='{{$variable->id}}' placeholder='{{$formula_final->rango_inicial}} - {{$formula_final->rango_final}}'/>
+                                </div>
+                            </div>
+                        @endforeach
+                        {{ csrf_field() }}
+                    </div>
 
+
+                    <div class='col-6 my-5'>
+                        <button type='submit' class="btn btn-info">
+                            Evaluar
+                        </button>
+                    </div>
+                </form>
+            @endif
+        </div>
 
 
 

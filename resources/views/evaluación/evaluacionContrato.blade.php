@@ -367,7 +367,7 @@
 
                 <div class='col-6 my-5'>
                     <button type='submit' class="btn btn-info">
-                        Crear fórmula
+                        Evaluar
                     </button>
                 </div>
             </form>

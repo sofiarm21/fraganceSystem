@@ -25,6 +25,8 @@ Route::get('/Evaluacion/resultado/{id_productor}/{id_proveedor}', 'Evaluación\E
 Route::get('/Evaluacion/generacion-contrato/{id_productor}/{id_proveedor}', 'Evaluación\GeneracionContratoController@view');
 Route::get('/Evaluacion/detalle-contrato/{id_productor}/{id_proveedor}/{id_contrato}', 'Evaluación\ContratoDetailController@view');
 Route::get('/Evaluacion/formula-final/{id_productor}', 'Evaluación\FormulaFinalController@view');
+Route::get('/Evaluacion/formula-final/resultado/{id_productor}/{resultado}/{nota}', 'Evaluación\FormulaFinalController@view');
+
 
 
 Route::post('/Evaluacion/creacion-formula-inicial/create/{id}', 'Evaluación\FormulaInicialController@create');
@@ -32,6 +34,8 @@ Route::post('/Evaluacion/creacion-escala/create/{id}', 'Evaluación\EscalaContro
 Route::post('/Evaluacion/creacion-contrato/evaluar/{id_productor}/{ID_PROVEEDOR}', 'Evaluación\EvaluacionContratoController@evaluar');
 Route::post('/Evaluacion/generacion-contrato/create/{id_productor}/{id_proveedor}', 'Evaluación\GeneracionContratoController@create');
 Route::post('/Evaluacion/creacion-formula-final/create/{id}', 'Evaluación\FormulaFinalController@create');
+Route::post('/Evaluacion/evaluacion-final/{id_productor}/{id_proveedor}', 'Evaluación\contratoDetailController@evaluarFinal');
+
 
 
 

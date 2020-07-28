@@ -27,6 +27,91 @@ class ContratoDetailController extends Controller
         return $contratos;
     }
 
+    function getVariablesFinales(){
+        $variables = DB::table('sms_variable')
+        ->select(
+            'nombre',
+            'descripcion',
+            'id'
+        )
+        ->where('tipo','=','f')
+        ->get();
+
+        return $variables;
+    }
+
+    // function getEscala($id_productor){
+    //     $escala = DB::table('sms_escala')
+    //     ->select('sms_escala.rango_inicial', 'sms_escala.rango_final')
+    //     ->from('sms_escala')
+    //     ->where('sms_escala.id_productor','=',$id)
+    //     ->where('sms_escala.fecha_final','=',null)
+    //     ->get()
+    //     ->values([0]);
+    //
+    //     return $escala;
+    // }
+
+    function getFormulaFinal($id_productor){
+        echo "$id_productor";
+        $formula_final = DB::table('sms_eval_criterio')
+        ->join('sms_escala','sms_eval_criterio.id_productor','=', 'sms_eval_criterio.id_productor')
+        ->where('sms_eval_criterio.id_productor','=',$id_productor)
+        ->where('sms_escala.id_productor','=',$id_productor)
+        ->where('sms_eval_criterio.fecha_final','=',null)
+        ->where('sms_escala.fecha_final','=',null)
+        ->where('sms_eval_criterio.tipo_formula','=','f')
+        ->select(
+            'sms_eval_criterio.id_variable',
+            'sms_eval_criterio.peso',
+            'sms_escala.rango_inicial',
+            'sms_escala.rango_final',
+        )
+        ->get();
+        var_dump($formula_final);
+        return $formula_final[0];
+    }
+
+
+    public function evaluarFinal($id_productor, $id_proveedor, $codigo_contrato){
+
+        $productor = Productor::findOrFail($id_productor);
+        $proveedor = Proveedor::findOrFail($id_proveedor);
+        $formula_final = self::getFormulaFinal($id_productor);
+
+        foreach ($formula_final as $variable){
+            if (($request->input($variable->id_variable) > 10) || ($request->input($variable->id_variable) < 1)){
+                return back()->withInput();
+            }
+        }
+
+        $evaluacion_resultado = new EvaluacionResultado();
+        $evaluacion_resultado->id_productor=$id_productor;
+        $evaluacion_resultado->id_proveedor=$id_proveedor;
+        $evaluacion_resultado->fecha_realizada = date('Y-m-d H:i:s');
+        $evaluacion_resultado->tipo_eval = 'f';
+
+        $suma = 0;
+        foreach ($formula_final as $variable){
+            $suma += $request->input($variable->id_variable) * ($variable->peso / 100);
+        }
+
+        $evaluacion_resultado->resultado = $suma;
+        $evaluacion_resultado->save();
+
+        $aprobado = false;
+        if ($evaluacion_resultado->resultado > $formula_final->rango_final 0.8){
+            $aprobado = true;
+        }
+
+        return view('evaluación/evaluacionResultado', [
+            'productor' => $productor,
+            'proveedor' => $proveedor,
+            'aprobado' => $aprobado
+        ]);
+
+    }
+
 
 
 
@@ -35,6 +120,9 @@ class ContratoDetailController extends Controller
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
         $contrato = Contrato::findOrFail($codigo_contrato);
+        $variables = self::getVariablesFinales();
+        $formula_final=self::getFormulaFinal($id_productor);
+        //$escala = self::getEscala($id_productor);
 
 
         $productos_contratados = DB::table('sms_det_contrato')
@@ -110,6 +198,9 @@ class ContratoDetailController extends Controller
             'ingredientes_otros' => $ingredientes_otros_contratados,
             'condiciones_pago' => $condiciones_pago,
             'condiciones_envio' => $condiciones_envio,
+            'variables' => $variables,
+            'formula_final'=>$formula_final
+
         ]);
     }
 
