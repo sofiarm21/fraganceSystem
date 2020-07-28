@@ -8,7 +8,7 @@
     <div class='PedidoDetail row  mt-5'>
         <div class='col-12'>
             <h3>
-                Pedido {{$pedido->codigo}}
+                Pedido
             </h3>
             <h5>
                 Productor: {{$productor->nombre}}
@@ -92,35 +92,46 @@
             </h5>
         </div>
         @foreach ($ingredientes_otros as $producto)
-        @if(count($producto) != 0)
+            @if(count($producto) != 0)
 
-        <div class='col-4 p-4'>
-            <div class='card bg-white p-0'>
-                <div class='productCard card-img-top'>
-                </div>
-                <div class='card-body'>
-                    <div class='text-secondary'>
-                        <p class='font-weight-bold'>
-                            {{$producto[0]->nombre}}
-                            <br/>
-                            {{$producto[0]->volml}} ml - $ {{$producto[0]->precio}}
-                            <br/>
-                            {{$producto[0]->otro}}
-                            <br/>
-                            Cantidad: {{$producto[0]->cantidad}}
-                        </p>
+                <div class='col-4 p-4'>
+                    <div class='card bg-white p-0'>
+                        <div class='productCard card-img-top'>
+                        </div>
+                        <div class='card-body'>
+                            <div class='text-secondary'>
+                                <p class='font-weight-bold'>
+                                    {{$producto[0]->nombre}}
+                                    <br/>
+                                    {{$producto[0]->volml}} ml - $ {{$producto[0]->precio}}
+                                    <br/>
+                                    {{$producto[0]->otro}}
+                                    <br/>
+                                    Cantidad: {{$producto[0]->cantidad}}
+                                </p>
 
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        @endif
+            @endif
         @endforeach
 
-        <div class ='col-6 mt-5'>
-            <h5>
+        <div class ='col-12 mt-5'>
+            <h5 class='mb-5'>
                 Método de pago
             </h5>
+            <div class='row text-secondary mb-5 font-weight-bold'>
+                <div class='col'>
+                    Tipo
+                </div>
+                <div class='col'>
+                    Número de cuotas
+                </div>
+                <div class='col'>
+                    Porcentajes
+                </div>
+            </div>
             @for($i=0; $i < count($metodos_pago); $i++)
                     <div class='row text-secondary'>
                         <div class='tipoPago col'>
@@ -155,15 +166,15 @@
                                     <p class='font-weight-bold mb-0'>
                                         Pago {{$i + 1}}:
                                     </p>
-                                        {{$metodos_pago[$i]->porcentaje_pago}} %
+                                        {{$metodos_pago[$i]->porcentaje_pago}} %  ‣ $ {{$pedido->total * ($metodos_pago[$i]->porcentaje_pago / 100)}}
                                     <p class='font-weight-bold mb-0'>
                                         Recargo:
                                     </p>
-                                    {{$metodos_pago[$i]->porcentaje_recargo}} %
+                                    {{$metodos_pago[$i]->porcentaje_recargo}} %  + $ {{$pedido->total * ($metodos_pago[$i]->porcentaje_recargo / 100)}}
                                     <p class='font-weight-bold mb-0'>
                                         Descuento:
                                     </p>
-                                    {{$metodos_pago[$i]->porcentaje_descuento}} %
+                                    {{$metodos_pago[$i]->porcentaje_descuento}} %  - $ {{$pedido->total * ($metodos_pago[$i]->porcentaje_descuento / 100)}}
                             @else
                             <p class='font-weight-bold mb-0'>
                                 Pago:
@@ -178,10 +189,10 @@
             @endfor
 
         </div>
-        <div class='col-6 mt-5'>
+        <div class='col-12 mt-5'>
             <h5>
             Envio
-        </h5>
+            </h5>
             <div class='row text-secondary font-weight-bold mt-3'>
                 <div class='col'>
                     País
@@ -208,6 +219,23 @@
                 <div class='col'>
                 </div>
             </div>
+        </div>
+        <div class='col-12 my-5'>
+            <h5>
+                Monto total
+            </h5>
+            <p class='font-weight-bold'>
+            $ {{$pedido->total}}
+            </p>
+        </div>
+        <div class='col-12 mb-5'>
+            @if ($pedido->fecha_recibido == null && $pedido->estado == 1)
+            <a href='/Compras/pedido/detalle/recibido/{{$productor->id}}/{{$proveedor->id}}/{{$pedido->codigo}}'>
+                <button type='submit' class="btn btn-info">
+                    Recibido
+                </button>
+            </a>
+            @endif
         </div>
     </div>
 

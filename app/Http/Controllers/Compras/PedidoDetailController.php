@@ -115,6 +115,17 @@ class PedidoDetailController extends Controller
         return $pago;
     }
 
+    public function recibido($id_productor, $id_proveedor, $id_pedido){
+
+
+        DB::table('sms_pedido')
+            -> where('codigo', $id_pedido)
+            ->update(['fecha_recibido' => date('Y-m-d H:i:s')]);
+
+
+        return self::view($id_productor, $id_proveedor, $id_pedido);
+    }
+
     public function view($id_productor, $id_proveedor, $id_pedido){
 
         $productor = Productor::findOrFail($id_productor);

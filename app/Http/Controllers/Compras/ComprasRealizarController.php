@@ -185,6 +185,26 @@ class ComprasRealizarController extends Controller
         return($condicion_envio[0]);
     }
 
+    function getCondicionPago($cod_cond_pago){
+        $condicion_pago =  DB::table('sms_condicion_pago')
+        ->leftJoin('sms_cuotas','sms_condicion_pago.codigo','=','sms_cuotas.cod_cond_pago')
+        ->where('sms_condicion_pago.codigo','=',$cod_cond_pago)
+        ->select(
+            'sms_condicion_pago.cantidad_cuotas',
+            'sms_condicion_pago.tipo',
+            'sms_condicion_pago.descripcion',
+            'sms_cuotas.porcentaje_pago',
+            'sms_cuotas.tiempo_para_pago',
+            'sms_cuotas.porcentaje_descuento',
+            'sms_cuotas.porcentaje_recargo',
+            'sms_cuotas.cod_cond_pago'
+            )
+        ->distinct()
+        ->get();
+
+        return $condicion_pago;
+    }
+
 
 
 
@@ -371,6 +391,7 @@ class ComprasRealizarController extends Controller
         $productor = Productor::findOrFail($id_productor);
         $proveedor = Proveedor::findOrFail($id_proveedor);
         $condicion_pago = CondicionPago::findOrFail($cod_cond_pago);
+        $condicion_pago = self::getCondicionPago($cod_cond_pago);
 
         $detalles_pedido = $request->session()->get('detalles_pedido');
         $pedido = $request->session()->get('pedido');
@@ -382,6 +403,8 @@ class ComprasRealizarController extends Controller
 
         $pedido->cod_cond_pago_c_p = $cod_cond_pago;
 
+        echo($condicion_pago);
+
         return view('compras/comprasConfirmar', [
             'proveedor' => $proveedor,
             'productor' => $productor,
@@ -389,7 +412,7 @@ class ComprasRealizarController extends Controller
             'det_pedido' => $detalles_pedido,
             'ingredientes_pedidos' => $ingredientes_pedidos,
             'envio'=>$envio,
-            'condicion_pago' => $condicion_pago,
+            'metodos_pago' => $condicion_pago,
             'monto_total' => $monto_total
         ]);
 
@@ -401,11 +424,32 @@ class ComprasRealizarController extends Controller
         $proveedor = Proveedor::findOrFail($id_proveedor);
         $metodos_pago = self::getCondicionesPago($id_productor, $id_proveedor);
         $pedido = $request->session()->get('pedido');
+        $detalles_pedido = $request->session()->get('detalles_pedido');
+
+        $monto_total = 0;
+        $ingredientes_pedidos = [];
+        $montos=[];
+
+        foreach($detalles_pedido as $detalle){
+            array_push($ingredientes_pedidos, self::getIngredientePedido($detalle->id_presentacion_mp));
+            array_push($montos, self::getIngredientePedido($detalle->id_presentacion_mp)->precio * $detalle->cantidad);
+            $monto_total += self::getIngredientePedido($detalle->id_presentacion_mp)->precio * $detalle->cantidad;
+        }
+
+        foreach($metodos_pago AS $metodo){
+            $pedido->total += $pedido->total * ($metodo->porcentaje_recargo / 100);
+            $pedido->total -= $pedido->total * ($metodo->porcentaje_descuento / 100);
+        }
+
+        //$pedido->total = $monto_total + $envio->costo;
+
 
         return view('compras/comprasPago', [
             'proveedor' => $proveedor,
             'productor' => $productor,
             'metodos_pago' => $metodos_pago,
+            'monto_total' => $monto_total,
+            'pedido' => $pedido
         ]);
 
     }
@@ -417,7 +461,7 @@ class ComprasRealizarController extends Controller
         $detalles_pedido = $request->session()->get('detalles_pedido');
 
 
-        $pedido->estado = 0;
+        $pedido->estado = 1;
 
 
         // echo "id_proveedor ";

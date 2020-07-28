@@ -66,15 +66,15 @@
                                             <p class='font-weight-bold mb-0'>
                                                 Pago {{$i + 1}}:
                                             </p>
-                                                {{$metodos_pago[$i]->porcentaje_pago}} %
+                                                {{$metodos_pago[$i]->porcentaje_pago}} % - $ {{$pedido->total * ($metodos_pago[$i]->porcentaje_pago / 100)}}
                                             <p class='font-weight-bold mb-0'>
                                                 Recargo:
                                             </p>
-                                            {{$metodos_pago[$i]->porcentaje_recargo}} %
+                                            {{$metodos_pago[$i]->porcentaje_recargo}} % - $ {{$pedido->total * ($metodos_pago[$i]->porcentaje_recargo / 100)}}
                                             <p class='font-weight-bold mb-0'>
                                                 Descuento:
                                             </p>
-                                            {{$metodos_pago[$i]->porcentaje_descuento}} %
+                                            {{$metodos_pago[$i]->porcentaje_descuento}} % - $ {{$pedido->total * ($metodos_pago[$i]->porcentaje_descuento / 100)}}
                                     @else
                                     <p class='font-weight-bold mb-0'>
                                         Pago:

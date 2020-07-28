@@ -128,6 +128,11 @@
                 </div>
 
         </form>
+        <a href='/Compras/menu/{{$productor->id}}'>
+            <button type='submit' class="btn btn-info">
+                Cancelar
+            </button>
+        </a>
     </div>
     </div>
 
