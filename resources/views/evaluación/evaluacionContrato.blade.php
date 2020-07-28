@@ -357,7 +357,7 @@
                                 {{$variable->descripcion}}
                             </div>
                             <div class='col-1'>
-                                <input type='text' name='{{$variable->id}}' placeholder='1-10'/>
+                                <input type='text' name='{{$variable->id}}' placeholder='{{$formula_inicial->rango_inicial}} - {{$formula_inicial->rango_final}}'/>
                             </div>
                         </div>
                     @endforeach

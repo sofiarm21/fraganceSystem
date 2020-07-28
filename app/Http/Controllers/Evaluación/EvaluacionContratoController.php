@@ -71,7 +71,8 @@ class EvaluacionContratoController extends Controller
         // ->get();
 
         foreach ($formula_inicial as $variable){
-            if (($request->input($variable->id_variable) > {{$variable->rango_inicial}}) || ($request->input($variable->id_variable) < $variable->rango_final)){
+            var_dump($variable);
+            if (($request->input($variable->id_variable) > $variable->rango_final) || ($request->input($variable->id_variable) < $variable->rango_inicial)){
                 return back()->withInput();
             }
 
@@ -93,7 +94,7 @@ class EvaluacionContratoController extends Controller
         $evaluacion_resultado->save();
 
         $aprobado = false;
-        if ($evaluacion_resultado->resultado > (0.8 * ($formula_inicial[0]->rango_final - $formula_inicial[0]->rango_inicial)) / 10){
+        if ($evaluacion_resultado->resultado > $formula_inicial[0]->rango_final * 0.8){
             $aprobado = true;
         }
 
@@ -104,9 +105,6 @@ class EvaluacionContratoController extends Controller
         ]);
 
     }
-
-
-
 
 
     public function view($id_productor, $id_proveedor){
