@@ -33,7 +33,13 @@ Route::post('/Evaluacion/generacion-contrato/create/{id_productor}/{id_proveedor
 
 Route::get('/Compras', 'ComprasController@index');
 
+
+
 Route::get('/Recomendador', 'RecomendadorController@index');
+Route::post('/Recomendador/resultado', 'RecomendadorController@recommend');
+Route::get('/Recomendador/results', 'RecomendadorResultadoController@view');
+Route::get('/Perfume/{codigo}', 'PerfumeDetailController@index');
+
 
 Route::get('/Productor', 'WelcomeProductorController@index');
 Route::get('/ProductorCatalogo/{id}', 'ProductorController@view');
