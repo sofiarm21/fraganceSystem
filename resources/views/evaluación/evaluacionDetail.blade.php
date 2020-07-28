@@ -35,7 +35,7 @@
 
                 @foreach ($contratos as $contrato)
 
-                    @if(\Carbon\Carbon::now()->diffInDays($contrato->fecha.'+1 year, -2 months', false) > 0)
+                    @if(\Carbon\Carbon::now()->diffInDays($contrato->fecha.'+1 year, -2 months', false) > 0 )
                         <div class="card col-3 mx-2 bg-white" style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">{{$contrato->nombre}}</h5>
@@ -57,10 +57,10 @@
                         Contratos proximos a vencerse
                     </h5>
                 </div>
-
                 @foreach ($contratos as $contrato)
 
                     @if($data_difference = \Carbon\Carbon::now()->diffInDays($contrato->fecha.'+1 year, -2 months', false) < 0)
+
                         <div class="card col-3 mx-2 bg-white" style="width: 18rem;">
                             <div class="card-body">
                                 <h5 class="card-title">{{$contrato->nombre}}</h5>
@@ -82,19 +82,27 @@
                 Fórmulas
             </h5>
         </div>
-        <div class='col-2'>
+        <div class='col-auto'>
             @if(count($escala) >= 1)
                 <a href='/Evaluacion/creacion-formula-inicial/{{$productor->id}}' class='text-light'>
                     <button type='button' class='btn btn-info mt-5'>
                         Crear fórmula inicial
                     </button>
                 </a>
+                <a href='/Evaluacion/formula-final/{{$productor->id}}' class='text-light'>
+                    <button type='button' class='btn btn-info mt-5'>
+                        Crear fórmula final
+                    </button>
+                </a>
             @else
                 <button type='button' class='btn btn-info mt-5' disabled>
                     Crear fórmula inicial
                 </button>
+                <button type='button' class='btn btn-info mt-5' disabled>
+                    Crear fórmula final
+                </button>
                 <p class='text text-danger mt-2'>
-                    Para crear una formula inicial debe haber creado una escala de evaluación
+                    Para crear una formula debe haber creado una escala de evaluación
                 </p>
             @endif
 

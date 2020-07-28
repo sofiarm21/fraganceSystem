@@ -23,7 +23,8 @@ class EvaluacionDetailController extends Controller
                 'sms_proveedores.nombre',
                 'sms_contrato.id_proveedor',
                 'sms_contrato.codigo',
-                'sms_contrato.fecha'
+                'sms_contrato.fecha',
+
             )
         ->distinct()
         ->get();

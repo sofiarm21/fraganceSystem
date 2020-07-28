@@ -16,6 +16,7 @@ use App\EvaluacionResultado;
 class EvaluacionContratoController extends Controller
 {
 
+
     public function getEscala($id_productor){
         $escala = DB::table('sms_escala')
         ->where(
@@ -24,7 +25,6 @@ class EvaluacionContratoController extends Controller
         );
         return $escala;
     }
-
 
 
     function getFormulaInicial($id_productor){
